@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, Image, Text} from 'react-native';
 import {styles} from '../../components/styles/styles';
 
-function FloatingBtn({screen, setScreen}) {
+function FloatingBtn({screen, setScreen, bottomOffset = 80}) {
   const changeType = (currentScreen, setScreenFunc) => {
     if (currentScreen === 'Solar') {
       setScreenFunc('Surveillance');
@@ -12,7 +12,7 @@ function FloatingBtn({screen, setScreen}) {
   };
 
   return (
-    <View style={styles.fixedButtonContainer}>
+    <View style={[styles.fixedButtonContainer, {bottom: bottomOffset}]}>
       <TouchableOpacity
         style={styles.fixedButton}
         onPress={() => changeType(screen, setScreen)}>

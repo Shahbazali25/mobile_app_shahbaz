@@ -105,7 +105,11 @@ function HomeScreen({screenType, setScreenType}) {
           <Cameras userData={userData} />
         )}
 
-        <FloatingBtn screen={screenType} setScreen={setScreenType} />
+        <FloatingBtn
+          screen={screenType}
+          setScreen={setScreenType}
+          bottomOffset={70}
+        />
       </View>
     </SafeAreaView>
   );

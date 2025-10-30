@@ -35,6 +35,8 @@ import {screenWidth} from '../components/utils/constants';
 import {checkUserRole} from '../components/utils/checkRole';
 import NetInfo from '@react-native-community/netinfo';
 import WebrtcWebView from '../components/WebrtcWebView';
+import CustomZonePicker from './CustomZonePicker'; // Adjust path as needed
+import CustomCameraStatusPicker from './CustomCameraStatusPicker'; // Adjust path as needed
 
 function Cameras({userData}) {
   const animation = useRef(null);
@@ -962,10 +964,10 @@ function Cameras({userData}) {
             style={{
               backgroundColor: 'white',
               marginHorizontal: 20,
-              padding: 16,
+              padding: 10,
               marginBottom: 10,
               borderWidth: 1,
-              borderColor: '#1E293B',
+              borderColor: '#d8dfe9ff',
               borderRadius: 8,
             }}>
             <Text
@@ -984,8 +986,26 @@ function Cameras({userData}) {
                 justifyContent: 'space-between',
                 gap: 12,
               }}>
+              {/* Zone Filter - Works on both iOS and Android */}
+              <View style={{flex: 1}}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 15,
+                    marginBottom: 4,
+                    color: '#23416bff',
+                  }}>
+                  Select Zone
+                </Text>
+                <CustomZonePicker
+                  zones={zones}
+                  selectedOption={selectedOption}
+                  handleZoneChange={handleZoneChange}
+                />
+              </View>
+
               {/* Zone Filter */}
-              {Platform.select({
+              {/* {Platform.select({
                 ios: (
                   <TouchableOpacity
                     onPress={onPress}
@@ -1042,16 +1062,39 @@ function Cameras({userData}) {
                             style={{
                               fontFamily: 'Poppins-Regular',
                               fontSize: 12,
+                              backgroundColor: '#fcf0f0ff',
                             }}
                           />
                         ))}
                     </Picker>
                   </View>
                 ),
-              })}
+              })} */}
 
               {/* Camera Status Filter */}
               {(userRole === 0 ||
+                userRole === 3 ||
+                userRole === 4 ||
+                userRole === 5) && (
+                <View style={{flex: 1}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 15,
+                      marginBottom: 4,
+                      color: '#23416bff',
+                    }}>
+                    Camera Status
+                  </Text>
+                  <CustomCameraStatusPicker
+                    selectedStatus={selectedStatus}
+                    setStatusOption={setStatusOption}
+                  />
+                </View>
+              )}
+
+              {/* Camera Status Filter */}
+              {/* {(userRole === 0 ||
                 userRole === 3 ||
                 userRole === 4 ||
                 userRole === 5) &&
@@ -1126,7 +1169,7 @@ function Cameras({userData}) {
                       </Picker>
                     </View>
                   ),
-                })}
+                })} */}
             </View>
           </View>
         )}
