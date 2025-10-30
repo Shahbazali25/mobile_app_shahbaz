@@ -1,3 +1,11 @@
+
+
+
+
+android/.gradle/
+android/app/build/
+ios/build/
+
 # OSX
 #
 .DS_Store
