@@ -1,0 +1,91 @@
+CHANGES MADE TO BUILD THE APK (generated on Oct 27, 2025)
+
+Summary
+- Purpose: prepare and produce a signed universal Android APK for distribution.
+- Location of final universal APK produced by the build:
+  android\app\build\outputs\apk\release\app-universal-release.apk
+
+Files I changed
+1) android/app/build.gradle
+   - Release signing: changed release signing to prefer Gradle properties (MYAPP_UPLOAD_*) so secrets are read from gradle.properties or the user-level ~/.gradle/gradle.properties. This avoids hard-coding passwords in the build file.
+     * New logic: if project property MYAPP_UPLOAD_STORE_FILE exists, Gradle will use:
+       - storeFile = MYAPP_UPLOAD_STORE_FILE
+       - storePassword = MYAPP_UPLOAD_STORE_PASSWORD
+       - keyAlias = MYAPP_UPLOAD_KEY_ALIAS
+       - keyPassword = MYAPP_UPLOAD_KEY_PASSWORD
+     * Fallback: if those properties are not present, the build will fall back to the committed keystore file `shahbaz-release-key.keystore` and the previously-known alias/password.
+   - ABI splits: enabled `splits.abi` with include for `armeabi-v7a, arm64-v8a, x86, x86_64` and set `universalApk true` so Gradle produces per-ABI APKs and a universal APK.
+
+2) package.json
+   - Added convenience npm scripts to run Gradle from project root on Windows (PowerShell):
+     - "build:android:debug": "cd android && .\\gradlew assembleDebug"
+     - "build:android:release": "cd android && .\\gradlew assembleRelease"
+
+Files I inspected (no edits)
+- android/gradle.properties: contains signing variables (MYAPP_UPLOAD_STORE_FILE, MYAPP_UPLOAD_KEY_ALIAS, MYAPP_UPLOAD_STORE_PASSWORD, MYAPP_UPLOAD_KEY_PASSWORD). These values were used during signing.
+- android/app/shahbaz-release-key.keystore: detected and inspected with keytool to confirm alias and validity.
+
+Keystore details (inspected locally)
+- Keystore file: android/app/shahbaz-release-key.keystore
+- Alias found: shahbaz-key
+- Store password (as found in android/gradle.properties): 252525
+- Valid from: Oct 27, 2025 — Mar 14, 2053
+- Keystore type: PKCS12
+
+Build commands I ran locally (PowerShell)
+1) Build release (produces signed APKs, per-ABI and universal after change):
+   cd C:\ibex\android
+   .\\gradlew assembleRelease
+
+2) Alternative: build an AAB (recommended for Play Store):
+   .\\gradlew bundleRelease
+
+Build outputs produced (path and file sizes on my run)
+- android\app\build\outputs\apk\release\app-universal-release.apk (approx 295.7 MB)
+- android\app\build\outputs\apk\release\app-arm64-v8a-release.apk (approx 84.2 MB)
+- android\app\build\outputs\apk\release\app-armeabi-v7a-release.apk (approx 71.6 MB)
+- android\app\build\outputs\apk\release\app-x86-release.apk (approx 91.4 MB)
+- android\app\build\outputs\apk\release\app-x86_64-release.apk (approx 93.7 MB)
+
+Notes about signing and mismatches
+- Gradle used `MYAPP_UPLOAD_*` values from `android/gradle.properties` during signing. These match the keystore alias found during inspection (alias `shahbaz-key`), so the APK is signed correctly.
+- If you plan to move keystore or change passwords, keep `MYAPP_UPLOAD_*` properties in a secure location. Recommended is user-level gradle properties at `%USERPROFILE%\\.gradle\\gradle.properties` or CI secret variables.
+
+How to install the APK on an Android phone
+1) Transfer the APK to the phone (USB MTP, Google Drive, Dropbox, OneDrive, or any file share). The universal APK works on any ABI.
+2) On phone, enable installation from unknown sources for the app used to download the APK (browser or file manager): Settings → Apps → Special app access → Install unknown apps → Allow for that app.
+3) On the phone, open the APK file and tap Install.
+4) If installation fails with "App not installed", check if an existing app with same package name is installed (signed with a different key). Uninstall previous app or use matching signature.
+
+Why the universal APK is large
+- Universal APK includes native libraries for all ABIs and increases size; consider distributing per-ABI APKs or an AAB (App Bundle) for Play Store to reduce download size per device.
+
+Files I added to help you prepare and upload the APK
+1) scripts/prepare_release.ps1 — copies the universal APK to a `release` folder and creates a ZIP (for easier upload). Uses relative paths and PowerShell's `Compress-Archive`.
+2) scripts/open_onedrive.ps1 — opens your OneDrive folder URL in the default browser to let you upload the APK via web (uses Start-Process).
+
+OneDrive upload guidance (manual)
+- I cannot upload to your OneDrive from this environment. To upload the APK to the folder you provided, do one of the following:
+  1) Web upload (recommended for large files):
+     - Open the folder link in your browser (https://ilmach-my.sharepoint.com/...) and sign in with your Microsoft account.
+     - Click Upload → Files and select the APK (or the ZIP that `prepare_release.ps1` creates).
+  2) OneDrive desktop client:
+     - If you have OneDrive synced to your PC, copy the APK (or ZIP) into the synced folder that corresponds to the target folder. The OneDrive client will upload automatically.
+  3) PowerShell / MS Graph (advanced):
+     - Use Microsoft Graph API to upload the file programmatically. This requires an OAuth access token with permission to upload to the target drive. Sample (replace placeholders):
+       # Get an access token (you must register an app or use existing creds)
+       $accessToken = '<ACCESS_TOKEN>'
+       $uploadUrl = "https://graph.microsoft.com/v1.0/drives/<DRIVE_ID>/items/<PARENT_ID>:/app-universal-release.apk:/content"
+       Invoke-RestMethod -Uri $uploadUrl -Method PUT -Headers @{Authorization = "Bearer $accessToken"} -InFile ".\\android\\app\\build\\outputs\\apk\\release\\app-universal-release.apk"
+     - If you want this script, I can add a template, but I can't perform the upload from here.
+
+Extra suggestions
+- If you want me to prepare the AAB instead, run `.\\gradlew bundleRelease` (or I can add an npm script) — Play Store prefers AAB.
+- If you want me to create a GitHub Actions or Azure DevOps pipeline to build and upload automatically to OneDrive/SharePoint using secrets, I can prepare that (you'll need to provide app credentials or configure secrets in the CI system).
+
+Contact me with next steps
+- I created `scripts/prepare_release.ps1` and `scripts/open_onedrive.ps1` in the repo. Run `.
+esources\scripts\prepare_release.ps1`? (or `.
+elease` tasks described below). If you prefer, I can also create a small README explaining how to run these scripts.
+
+End of note.

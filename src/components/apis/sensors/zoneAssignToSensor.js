@@ -1,0 +1,49 @@
+import {baseURL, deviceId} from '../../utils/baseUrl';
+import {loadData} from '../../auth/loadData';
+
+export const zoneAssignToSensor = async (zoneId, sensorId) => {
+  console.log(zoneId);
+  try {
+    const auth = await loadData();
+    console.log('AUTH DATA', auth);
+    const token = auth.access_token;
+    console.log('TOKEN:', token);
+    if (!token) {
+      throw new Error('❌ Unauthorized: No token found');
+    }
+
+    console.log(
+      '🔍 Creating camera zone from:',
+      `${baseURL}/device-zone/sensor-zone`,
+    );
+
+    const response = await fetch(baseURL + '/device-zone/sensor-zone', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        deviceId: deviceId,
+        zoneId: String(zoneId),
+        sensorId: sensorId,
+      }),
+    });
+
+    const zone = await response.json();
+    console.log(zone);
+
+    if (!zone.status === 200) {
+      throw new Error(
+        'Invalid API response: Expected zone to assign to sensor',
+      );
+    }
+
+    console.log('✅ Zone Assigned:', zone.data.message);
+    return zone;
+  } catch (error) {
+    console.log('ZONE ASSIGNING ERROR:', String(error));
+    throw error;
+  }
+};
