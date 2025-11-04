@@ -4,7 +4,7 @@ import LoginFormV2 from '../../../layouts/forms/loginForm-v2';
 
 export default function LoginV2() {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <ImageBackground
         source={require('../../../assets/imgs/onboarding-bg.png')}
         style={[styles.container, {width: '100%'}]}
@@ -17,7 +17,9 @@ export default function LoginV2() {
             justifyContent: 'flex-end',
             paddingHorizontal: 15,
           }}>
-          <Text style={styles.heading}>Go ahead and sign in to your account</Text>
+          <Text style={styles.heading}>
+            Go ahead and sign in to your account
+          </Text>
           <Text style={styles.headingText}>
             Sign in to enjoy the best managing experience
           </Text>
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
 
   heading: {

@@ -17,6 +17,7 @@ function UpdateMode() {
         Content={`Update ${modeName} Mode`}
         BackAction="ModesConfiguration"
         showThirdBtn={false}
+        textStyle={{color: '#fff'}}
       />
       <UpdateModeForm modeId={modeId} />
     </SafeAreaView>
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#1E293B',
   },
 });
 

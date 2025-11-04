@@ -3,8 +3,21 @@ import {View, TouchableOpacity, Image, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import shortenName from '../../components/utils/shortenName';
 
-function NavBar({Content, BackAction, showThirdBtn, ThirdBtnFunction, goBack}) {
+function NavBar({
+  Content,
+  BackAction,
+  showThirdBtn,
+  ThirdBtnFunction,
+  goBack,
+  textStyle,
+}) {
   const navigation = useNavigation();
+
+  // ✅ Detect text color from textStyle (fallback to dark)
+  const arrowTintColor =
+    textStyle?.color === '#fff' || textStyle?.color === 'white'
+      ? '#fff'
+      : '#1E293B';
 
   return (
     <View
@@ -22,11 +35,15 @@ function NavBar({Content, BackAction, showThirdBtn, ThirdBtnFunction, goBack}) {
         }>
         <Image
           source={require('../../assets/imgs/icons/angle-small-left.png')}
-          style={{width: 28, height: 28}}
+          style={{
+            width: 28,
+            height: 28,
+            tintColor: arrowTintColor, // 👈 changes automatically
+          }}
         />
       </TouchableOpacity>
-      <Text style={{fontSize: 20, fontFamily: 'Poppins-Medium'}}>
-        {shortenName(30,Content, 'Unknown Camera')}
+      <Text style={[{fontSize: 20, fontFamily: 'Poppins-Medium'}, textStyle]}>
+        {shortenName(30, Content, 'Unknown Camera')}
       </Text>
       {showThirdBtn && showThirdBtn ? (
         <TouchableOpacity onPress={() => navigation.navigate('AddCamera')}>

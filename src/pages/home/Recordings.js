@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  StatusBar,
   ActionSheetIOS,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -36,11 +37,11 @@ export default function Recordings() {
   const [dateOptions, setDateOptions] = useState([]);
   const [timeOptions, setTimeOptions] = useState([]);
   const navigation = useNavigation();
-  const parseDateTime = (dateTimeString) => {
+  const parseDateTime = dateTimeString => {
     const [datePart, timePart] = dateTimeString.split(' - ');
     return {
       date: datePart.trim(),
-      time: timePart.trim()
+      time: timePart.trim(),
     };
   };
 
@@ -83,17 +84,17 @@ export default function Recordings() {
         ...uniqueZones.map(zone => ({label: zone, value: zone})),
       ]);
 
-      const uniqueDates = [...new Set(
-        allRecordings.map(rec => parseDateTime(rec.savedDate).date)
-      )].sort();
+      const uniqueDates = [
+        ...new Set(allRecordings.map(rec => parseDateTime(rec.savedDate).date)),
+      ].sort();
       setDateOptions([
         {label: 'All Dates', value: 'all'},
         ...uniqueDates.map(date => ({label: date, value: date})),
       ]);
 
-      const uniqueTimes = [...new Set(
-        allRecordings.map(rec => parseDateTime(rec.savedDate).time)
-      )].sort();
+      const uniqueTimes = [
+        ...new Set(allRecordings.map(rec => parseDateTime(rec.savedDate).time)),
+      ].sort();
       setTimeOptions([
         {label: 'All Times', value: 'all'},
         ...uniqueTimes.map(time => ({label: time, value: time})),
@@ -144,13 +145,13 @@ export default function Recordings() {
 
     setFilteredRecordings(filtered);
   }, [
-    selectedCamera, 
-    selectedZone, 
-    selectedStartDate, 
-    selectedEndDate, 
-    selectedStartTime, 
-    selectedEndTime, 
-    allRecordings
+    selectedCamera,
+    selectedZone,
+    selectedStartDate,
+    selectedEndDate,
+    selectedStartTime,
+    selectedEndTime,
+    allRecordings,
   ]);
 
   const onPressStartDate = () => {
@@ -194,7 +195,7 @@ export default function Recordings() {
             });
             return;
           }
-          
+
           setSelectedEndDate(selectedDate.value);
         }
       },
@@ -241,13 +242,13 @@ export default function Recordings() {
             });
             return;
           }
-          
+
           setSelectedEndTime(selectedTime.value);
         }
       },
     );
   };
- 
+
   useEffect(() => {
     animation.current?.play();
 
@@ -306,6 +307,12 @@ export default function Recordings() {
   if (isLoading) {
     return (
       <View style={styles.animationContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -384,17 +391,18 @@ export default function Recordings() {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <NavBar Content="Recordings" BackAction="Home" showThirdBtn={false} />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          paddingHorizontal: 40,
-          marginTop: 6,
-          marginBottom: 15,
-        }}>
+    <SafeAreaView style={styles.safeArea}>
+      {/* 🔹 Dark header area */}
+      <View style={styles.headerContainer}>
+        <NavBar
+          Content="Recordings"
+          BackAction="Home"
+          showThirdBtn={false}
+          textStyle={{color: '#fff'}} // 👈 make heading text white
+        />
+      </View>
+      {/* 🔹 White main content */}
+      <View style={styles.contentContainer}>
         <Text style={{fontFamily: 'Poppins-SemiBold', fontSize: 16}}>
           Filters
         </Text>
@@ -442,7 +450,7 @@ export default function Recordings() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  width: '50%',
+                  width: '45%',
                 }}>
                 <Text
                   style={{
@@ -453,25 +461,40 @@ export default function Recordings() {
                   }}>
                   Select Zone
                 </Text>
-                <Picker
-                  selectedValue={selectedZone}
-                  onValueChange={itemValue => setSelectedZone(itemValue)}
-                  dropdownIconColor={'black'}
-                  dropdownIconRippleColor={'#1E293B'}
-                  style={styles.picker}>
-                  {zoneOptions.map((item, index) => (
-                    <Picker.Item
-                      key={index}
-                      label={item.label}
-                      value={item.value}
-                      style={{
-                        fontFamily: 'Poppins-Regular',
-                        fontSize: 12,
-                        borderRadius: 15,
-                      }}
-                    />
-                  ))}
-                </Picker>
+                <View
+                  style={{
+                    backgroundColor: '#E7E7E7',
+                    borderRadius: 40,
+                    overflow: 'hidden', // Ensures corners are clipped
+                    width: '100%',
+                    height: 50,
+                    justifyContent: 'center',
+                  }}>
+                  <Picker
+                    selectedValue={selectedZone}
+                    onValueChange={itemValue => setSelectedZone(itemValue)}
+                    dropdownIconColor={'black'}
+                    dropdownIconRippleColor={'#1E293B'}
+                    style={{
+                      width: '100%',
+                      height: 50,
+                      color: 'black',
+                      fontFamily: 'Poppins-Regular',
+                      paddingHorizontal: 10, // Optional: adds spacing inside
+                    }}>
+                    {zoneOptions.map((item, index) => (
+                      <Picker.Item
+                        key={index}
+                        label={item.label}
+                        value={item.value}
+                        style={{
+                          fontFamily: 'Poppins-Regular',
+                          fontSize: 12,
+                        }}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             ),
           })}
@@ -501,7 +524,8 @@ export default function Recordings() {
                     alignSelf: 'center',
                   }}>
                   {(selectedCamera &&
-                    cameraOptions.find(zone => zone.id === selectedCamera)?.name) ||
+                    cameraOptions.find(zone => zone.id === selectedCamera)
+                      ?.name) ||
                     'Select Camera'}
                 </Text>
               </TouchableOpacity>
@@ -511,7 +535,7 @@ export default function Recordings() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  width: '40%',
+                  width: '45%',
                 }}>
                 <Text
                   style={{
@@ -522,35 +546,50 @@ export default function Recordings() {
                   }}>
                   Select Camera
                 </Text>
-                <Picker
-                  selectedValue={selectedCamera}
-                  onValueChange={itemValue => setSelectedCamera(itemValue)}
-                  dropdownIconColor={'black'}
-                  style={styles.picker}>
-                  {cameraOptions.map((item, index) => (
-                    <Picker.Item
-                      key={index}
-                      label={item.label}
-                      value={item.value}
-                      style={{
-                        fontFamily: 'Poppins-Regular',
-                        fontSize: 12,
-                        borderRadius: 15,
-                      }}
-                    />
-                  ))}
-                </Picker>
+                <View
+                  style={{
+                    backgroundColor: '#E7E7E7',
+                    borderRadius: 20,
+                    overflow: 'hidden', // ensures corners clip
+                    width: '100%',
+                    height: 50,
+                    justifyContent: 'center',
+                  }}>
+                  <Picker
+                    selectedValue={selectedCamera}
+                    onValueChange={itemValue => setSelectedCamera(itemValue)}
+                    dropdownIconColor="black"
+                    style={{
+                      width: '100%',
+                      height: 50,
+                      color: 'black',
+                      fontFamily: 'Poppins-Regular',
+                    }}>
+                    {cameraOptions.map((item, index) => (
+                      <Picker.Item
+                        key={index}
+                        label={item.label}
+                        value={item.value}
+                        style={{
+                          fontFamily: 'Poppins-Regular',
+                          fontSize: 12,
+                        }}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             ),
           })}
         </View>
-        <View style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          width: '100%',
-          justifyContent: 'space-between',
-        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: 'space-between',
+          }}>
           {Platform.select({
             ios: (
               <>
@@ -574,58 +613,102 @@ export default function Recordings() {
               <>
                 <View style={{width: '45%'}}>
                   <Text style={styles.pickerLabel}>Start Date</Text>
-                  <Picker
-                    selectedValue={selectedStartDate}
-                    onValueChange={(itemValue) => setSelectedStartDate(itemValue)}
-                    style={styles.picker}>
-                    {dateOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={styles.pickerItem}
-                      />
-                    ))}
-                  </Picker>
+                  <View
+                    style={{
+                      backgroundColor: '#E7E7E7',
+                      borderRadius: 40,
+                      overflow: 'hidden',
+                      height: 50,
+                      justifyContent: 'center',
+                    }}>
+                    <Picker
+                      selectedValue={selectedStartDate}
+                      onValueChange={itemValue =>
+                        setSelectedStartDate(itemValue)
+                      }
+                      dropdownIconColor={'black'}
+                      dropdownIconRippleColor={'#1E293B'}
+                      style={{
+                        width: '100%',
+                        height: 50,
+                        color: 'black',
+                        fontFamily: 'Poppins-Regular',
+                      }}>
+                      {dateOptions.map((item, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={item.label}
+                          value={item.value}
+                          style={{
+                            fontFamily: 'Poppins-Regular',
+                            fontSize: 12,
+                          }}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
                 </View>
+
                 <View style={{width: '45%'}}>
                   <Text style={styles.pickerLabel}>End Date</Text>
-                  <Picker
-                    selectedValue={selectedEndDate}
-                    onValueChange={(itemValue) => {
-                      // Validate end date
-                      if (selectedStartDate && itemValue <= selectedStartDate) {
-                        Toast.show({
-                          type: 'error',
-                          text1: 'Invalid Date Range',
-                          text2: 'End date must be after start date.',
-                        });
-                        return;
-                      }
-                      setSelectedEndDate(itemValue);
-                    }}
-                    style={styles.picker}>
-                    {dateOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={styles.pickerItem}
-                      />
-                    ))}
-                  </Picker>
+                  <View
+                    style={{
+                      backgroundColor: '#E7E7E7',
+                      borderRadius: 40,
+                      overflow: 'hidden',
+                      height: 50,
+                      justifyContent: 'center',
+                    }}>
+                    <Picker
+                      selectedValue={selectedEndDate}
+                      onValueChange={itemValue => {
+                        if (
+                          selectedStartDate &&
+                          itemValue <= selectedStartDate
+                        ) {
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Invalid Date Range',
+                            text2: 'End date must be after start date.',
+                          });
+                          return;
+                        }
+                        setSelectedEndDate(itemValue);
+                      }}
+                      dropdownIconColor={'black'}
+                      dropdownIconRippleColor={'#1E293B'}
+                      style={{
+                        width: '100%',
+                        height: 50,
+                        color: 'black',
+                        fontFamily: 'Poppins-Regular',
+                      }}>
+                      {dateOptions.map((item, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={item.label}
+                          value={item.value}
+                          style={{
+                            fontFamily: 'Poppins-Regular',
+                            fontSize: 12,
+                          }}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
                 </View>
               </>
             ),
           })}
         </View>
-        <View style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          width: '100%',
-          justifyContent: 'space-between',
-        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: 'space-between',
+          }}>
           {Platform.select({
             ios: (
               <>
@@ -649,46 +732,60 @@ export default function Recordings() {
               <>
                 <View style={{width: '45%'}}>
                   <Text style={styles.pickerLabel}>Start Time</Text>
-                  <Picker
-                    selectedValue={selectedStartTime}
-                    onValueChange={(itemValue) => setSelectedStartTime(itemValue)}
-                    style={styles.picker}>
-                    {timeOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={styles.pickerItem}
-                      />
-                    ))}
-                  </Picker>
+                  <View style={styles.pickerWrapper}>
+                    <Picker
+                      selectedValue={selectedStartTime}
+                      onValueChange={itemValue =>
+                        setSelectedStartTime(itemValue)
+                      }
+                      dropdownIconColor={'black'}
+                      dropdownIconRippleColor={'#1E293B'}
+                      style={styles.picker}>
+                      {timeOptions.map((item, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={item.label}
+                          value={item.value}
+                          style={styles.pickerItem}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
                 </View>
+
                 <View style={{width: '45%'}}>
                   <Text style={styles.pickerLabel}>End Time</Text>
-                  <Picker
-                    selectedValue={selectedEndTime}
-                    onValueChange={(itemValue) => {
-                      // Validate end time
-                      if (selectedStartTime && itemValue <= selectedStartTime) {
-                        Toast.show({
-                          type: 'error',
-                          text1: 'Invalid Time Range',
-                          text2: 'End time must be after start time.',
-                        });
-                        return;
-                      }
-                      setSelectedEndTime(itemValue);
-                    }}
-                    style={styles.picker}>
-                    {timeOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={styles.pickerItem}
-                      />
-                    ))}
-                  </Picker>
+                  <View style={styles.pickerWrapper}>
+                    <Picker
+                      selectedValue={selectedEndTime}
+                      onValueChange={itemValue => {
+                        // Validate end time
+                        if (
+                          selectedStartTime &&
+                          itemValue <= selectedStartTime
+                        ) {
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Invalid Time Range',
+                            text2: 'End time must be after start time.',
+                          });
+                          return;
+                        }
+                        setSelectedEndTime(itemValue);
+                      }}
+                      dropdownIconColor={'black'}
+                      dropdownIconRippleColor={'#1E293B'}
+                      style={styles.picker}>
+                      {timeOptions.map((item, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={item.label}
+                          value={item.value}
+                          style={styles.pickerItem}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
                 </View>
               </>
             ),
@@ -711,6 +808,50 @@ export default function Recordings() {
 }
 
 const styles = StyleSheet.create({
+  pickerWrapper: {
+    backgroundColor: '#E7E7E7',
+    borderRadius: 40,
+    overflow: 'hidden', // ensures corners are rounded on Android
+    height: 50,
+    justifyContent: 'center',
+  },
+  picker: {
+    width: '100%',
+    height: 50,
+    color: 'black',
+    fontFamily: 'Poppins-Regular',
+  },
+  pickerItem: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 12,
+  },
+  pickerLabel: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+    marginTop: 10,
+    color: 'gray',
+  },
+
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1E293B', // dark only for top
+  },
+  headerContainer: {
+    backgroundColor: '#1E293B', // dark header area (NavBar section)
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: '#fff', // main content white
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    padding: 20,
+
+    marginTop: 6,
+    marginBottom: 15,
+    borderRadius: 30,
+  },
+
   form: {
     display: 'flex',
     flexDirection: 'column',
@@ -719,7 +860,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     flexGrow: 1,
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
   },
   animationContainer: {
     flex: 1,
@@ -772,7 +913,7 @@ const styles = StyleSheet.create({
   picker: {
     width: '100%',
     height: 50,
-    borderRadius: 10,
+    borderRadius: 40,
     fontFamily: 'Poppins-Regular',
     backgroundColor: '#E7E7E7',
     color: 'black',
@@ -807,5 +948,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 12,
     borderRadius: 15,
-  }
+  },
 });

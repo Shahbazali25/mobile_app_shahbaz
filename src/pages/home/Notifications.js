@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Modal,
+  StatusBar,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,6 +17,7 @@ import {getCameraNotifications} from '../../components/apis/cameras/notification
 import {alertStatus} from '../../components/apis/cameras/alertsStatus';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {checkUserRole} from '../../components/utils/checkRole';
+import NavBar from '../../layouts/navigations/navbar';
 
 export default function Notifications() {
   const animation = useRef(null);
@@ -65,7 +67,7 @@ export default function Notifications() {
             'local_start_stream',
             'local_stop_stream',
             'camera_bind',
-            "detection_config_updated"
+            'detection_config_updated',
           ];
           const filteredCameraNotifications = {
             data: response.data.filter(notification =>
@@ -96,6 +98,12 @@ export default function Notifications() {
   if (isLoading) {
     return (
       <View style={styles.animationContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -214,8 +222,8 @@ export default function Notifications() {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+      {/* <View
         style={{
           display: 'flex',
           alignSelf: 'stretch',
@@ -234,6 +242,14 @@ export default function Notifications() {
           }}>
           Notifications
         </Text>
+      </View> */}
+      <View style={styles.headerContainer}>
+        <NavBar
+          Content="Notifications"
+          BackAction="Home"
+          showThirdBtn={true}
+          textStyle={{color: '#fff'}} // 👈 make heading text white
+        />
       </View>
       <ScrollView style={styles.form}>
         <View style={styles.container}>

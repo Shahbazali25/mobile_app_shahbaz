@@ -4,7 +4,7 @@ import {screenWidth} from '../utils/constants';
 export const styles = StyleSheet.create({
   homeSafeArea: {
     flex: 1,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#1E293B',
   },
   homeScreenContainer: {
     flex: 1,

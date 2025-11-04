@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AnimatedLottieView from 'lottie-react-native';
 import {styles} from '../../components/styles/styles';
@@ -73,6 +73,12 @@ function HomeScreen({screenType, setScreenType}) {
   if (isLoading && screenType === 'Surveillance') {
     return (
       <View style={customStyles.container}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/camera-animation.json')}
@@ -85,6 +91,12 @@ function HomeScreen({screenType, setScreenType}) {
   } else if (isLoading && screenType === 'Solar') {
     return (
       <View style={customStyles.container}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/solar-animation.json')}
@@ -120,6 +132,7 @@ const customStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#ffff',
   },
   animation: {
     width: 300,

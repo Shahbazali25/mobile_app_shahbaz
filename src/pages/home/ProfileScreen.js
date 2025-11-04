@@ -61,6 +61,12 @@ function ProfileScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -74,8 +80,8 @@ function ProfileScreen() {
 
   return (
     // make this page scrollable
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <StatusBar translucent={false} backgroundColor="#FFFFFF" />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+      <StatusBar translucent={false} />
       <View style={styles.container}>
         {/* add some margin to the right side of NavBar */}
         <View style={{marginRight: 25}}>
@@ -339,6 +345,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   scrollViewContent: {
     flexGrow: 1,

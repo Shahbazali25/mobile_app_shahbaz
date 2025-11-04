@@ -9,6 +9,7 @@ import {
   ActionSheetIOS,
   Button,
   Platform,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
@@ -496,6 +497,12 @@ function Cameras({userData}) {
   if (isLoading) {
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../assets/animations/camera-animation.json')}
@@ -1301,6 +1308,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#E7E7E7',
   },
 
   picker: {

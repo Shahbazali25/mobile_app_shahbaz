@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   Modal,
+  StatusBar,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -15,8 +16,8 @@ import AnimatedLottieView from 'lottie-react-native';
 import NavBar from '../../layouts/navigations/navbar';
 import {getAllSensors} from '../../components/apis/sensors/getAllSensors';
 import {deleteSensor} from '../../components/apis/sensors/deleteSensor';
-import { sensorIcons } from '../../components/utils/icons';
-import { checkUserRole } from '../../components/utils/checkRole';
+import {sensorIcons} from '../../components/utils/icons';
+import {checkUserRole} from '../../components/utils/checkRole';
 
 function SensorSetup() {
   const navigation = useNavigation();
@@ -83,6 +84,12 @@ function SensorSetup() {
   if (isLoading && !userRole) {
     return (
       <View style={styles.loadingContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -107,7 +114,7 @@ function SensorSetup() {
     };
     const handleEdit = () => {
       console.log('Edit:', item.id);
-      console.log(item.mqttTopic)
+      console.log(item.mqttTopic);
       navigation.navigate('UpdateSensor', {
         sensorId: item.id,
         name: item.name,
@@ -122,7 +129,6 @@ function SensorSetup() {
       });
       setMenuVisible(null);
     };
-    
 
     const sensorIcon = sensorId => {
       const foundSensor = sensors.find(sensor => sensor.id === sensorId);
@@ -160,14 +166,14 @@ function SensorSetup() {
             />
             <Text style={styles.cameraName}>{item.name}</Text>
           </View>
-          {
-            (userRole===0 || userRole === 2) && <TouchableOpacity onPress={handleMenuToggle}>
-            <Image
-              source={require('../../assets/imgs/icons/options-dots.png')}
-              style={styles.optionsDots}
-            />
-          </TouchableOpacity>
-          }
+          {(userRole === 0 || userRole === 2) && (
+            <TouchableOpacity onPress={handleMenuToggle}>
+              <Image
+                source={require('../../assets/imgs/icons/options-dots.png')}
+                style={styles.optionsDots}
+              />
+            </TouchableOpacity>
+          )}
           {isMenuOpen && (
             <View style={styles.menuContainer}>
               <TouchableOpacity
@@ -229,10 +235,8 @@ function SensorSetup() {
     );
   };
 
-  
-
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <NavBar
           Content="Sensors Configuration"
@@ -251,20 +255,20 @@ function SensorSetup() {
           <Text style={{fontFamily: 'Poppins-SemiBold', fontSize: 18}}>
             Sensors
           </Text>
-          {
-            (userRole===0 || userRole ===2) && <TouchableOpacity
-            onPress={() => navigation.navigate('AddSensor')}
-            style={styles.button}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                color: 'white',
-                fontSize: 12,
-              }}>
-              Add Sensor
-            </Text>
-          </TouchableOpacity>
-          }
+          {(userRole === 0 || userRole === 2) && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AddSensor')}
+              style={styles.button}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  color: 'white',
+                  fontSize: 12,
+                }}>
+                Add Sensor
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={{flex: 1, paddingBottom: 90, paddingHorizontal: 20}}>
           <FlatList
@@ -308,9 +312,25 @@ function SensorSetup() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1E293B', // dark only behind status bar / edges
+  },
   container: {
     flex: 1,
+    backgroundColor: '#fff', // 👈 white background for content area
   },
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 7,
+  },
+
+  // container: {
+  //   flex: 1,
+  // },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',

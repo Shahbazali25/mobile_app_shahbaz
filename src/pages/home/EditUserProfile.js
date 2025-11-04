@@ -46,6 +46,12 @@ function EditUserProfile() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -140,8 +146,8 @@ function EditUserProfile() {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <StatusBar translucent={false} backgroundColor="#FFFFFF" />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+      <StatusBar translucent={false} backgroundColor="#1E293B" />
       <View style={styles.container}>
         <NavBar
           Content="Edit Profile"
@@ -156,10 +162,11 @@ function EditUserProfile() {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#E2E8F0',
+            backgroundColor: '#455266ff',
             borderRadius: 30,
             padding: 6,
             marginVertical: 20,
+            marginHorizontal: 5,
           }}>
           <TouchableOpacity
             style={
@@ -176,11 +183,21 @@ function EditUserProfile() {
             }
             onPress={() => changeState('Profile Setup')}>
             <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                alignSelf: 'center',
-                paddingVertical: 10,
-              }}>
+              style={
+                screenState === 'Profile Setup'
+                  ? {
+                      fontFamily: 'Poppins-Medium',
+                      alignSelf: 'center',
+                      paddingVertical: 10,
+                      color: '#000000ff',
+                    }
+                  : {
+                      fontFamily: 'Poppins-Medium',
+                      alignSelf: 'center',
+                      paddingVertical: 10,
+                      color: '#ffff',
+                    }
+              }>
               Profile Setup
             </Text>
           </TouchableOpacity>
@@ -199,12 +216,21 @@ function EditUserProfile() {
             }
             onPress={() => changeState('Security')}>
             <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                alignSelf: 'center',
-                paddingVertical: 10,
-                color: '#64748B',
-              }}>
+              style={
+                screenState === 'Profile Setup'
+                  ? {
+                      fontFamily: 'Poppins-Medium',
+                      alignSelf: 'center',
+                      paddingVertical: 10,
+                      color: '#ffffffff',
+                    }
+                  : {
+                      fontFamily: 'Poppins-Medium',
+                      alignSelf: 'center',
+                      paddingVertical: 10,
+                      color: '#000000ff',
+                    }
+              }>
               Security
             </Text>
           </TouchableOpacity>
@@ -343,6 +369,7 @@ function EditUserProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -387,9 +414,9 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderRadius: 9,
     // i want to add marginTop of 1% because of the screen size of different mobile devices
-    marginTop: '2%',
+    marginTop: '1%',
     paddingLeft: 10,
-    height: 30,
+    height: 35,
     paddingVertical: 0,
     paddingTop: 0,
     paddingBottom: 0,

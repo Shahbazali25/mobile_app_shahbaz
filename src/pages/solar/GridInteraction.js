@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, processColor} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  processColor,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LineChart} from 'react-native-charts-wrapper';
 
@@ -11,20 +19,30 @@ const mockData = {
     stats: {
       import: 43.3,
       export: 9.0,
-      yesterday: 67.2
+      yesterday: 67.2,
     },
     voltages: {
       p1: 235,
       p2: 241,
-      p3: 233
+      p3: 233,
     },
     chartData: {
       dataSets: [
         {
           values: [
-            {x: 6, y: 2.1}, {x: 7, y: 1.8}, {x: 8, y: 4.5}, {x: 9, y: 6.2},
-            {x: 10, y: 8.5}, {x: 11, y: 7.1}, {x: 12, y: 5.3}, {x: 13, y: 3.8}, 
-            {x: 14, y: 2.5}, {x: 15, y: 4.2}, {x: 16, y: 3.1}, {x: 17, y: 2.8}, {x: 18, y: 1.9}
+            {x: 6, y: 2.1},
+            {x: 7, y: 1.8},
+            {x: 8, y: 4.5},
+            {x: 9, y: 6.2},
+            {x: 10, y: 8.5},
+            {x: 11, y: 7.1},
+            {x: 12, y: 5.3},
+            {x: 13, y: 3.8},
+            {x: 14, y: 2.5},
+            {x: 15, y: 4.2},
+            {x: 16, y: 3.1},
+            {x: 17, y: 2.8},
+            {x: 18, y: 1.9},
           ],
           label: 'Import',
           config: {
@@ -38,13 +56,23 @@ const mockData = {
             fillColor: processColor('#EF4444'),
             fillAlpha: 30,
             drawFilled: true,
-          }
+          },
         },
         {
           values: [
-            {x: 6, y: 15}, {x: 7, y: 14}, {x: 8, y: 2.2}, {x: 9, y: 9.8},
-            {x: 10, y: 13.5}, {x: 11, y: 14.2}, {x: 12, y: 22.1}, {x: 13, y: 12.5}, 
-            {x: 14, y: 6}, {x: 15, y: 7.8}, {x: 16, y: 8.2}, {x: 17, y: 13.3}, {x: 18, y: 16}
+            {x: 6, y: 15},
+            {x: 7, y: 14},
+            {x: 8, y: 2.2},
+            {x: 9, y: 9.8},
+            {x: 10, y: 13.5},
+            {x: 11, y: 14.2},
+            {x: 12, y: 22.1},
+            {x: 13, y: 12.5},
+            {x: 14, y: 6},
+            {x: 15, y: 7.8},
+            {x: 16, y: 8.2},
+            {x: 17, y: 13.3},
+            {x: 18, y: 16},
           ],
           label: 'Export',
           config: {
@@ -55,18 +83,28 @@ const mockData = {
             drawCircles: true,
             drawValues: false,
             mode: 'CUBIC_BEZIER',
-            fillColor:  processColor('#10B981'),
+            fillColor: processColor('#10B981'),
             fillAlpha: 30,
             drawFilled: true,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     yesterdayData: {
       values: [
-        {x: 6, y: 1.8}, {x: 7, y: 1.2}, {x: 8, y: 2.1}, {x: 9, y: 3.8},
-        {x: 10, y: 15.9}, {x: 11, y: 7.5}, {x: 12, y: 14.8}, {x: 13, y: 23.2}, 
-        {x: 14, y: 8.1}, {x: 15, y: 10.9}, {x: 16, y: 15.8}, {x: 17, y: 22.5}, {x: 18, y: 18.7}
+        {x: 6, y: 1.8},
+        {x: 7, y: 1.2},
+        {x: 8, y: 2.1},
+        {x: 9, y: 3.8},
+        {x: 10, y: 15.9},
+        {x: 11, y: 7.5},
+        {x: 12, y: 14.8},
+        {x: 13, y: 23.2},
+        {x: 14, y: 8.1},
+        {x: 15, y: 10.9},
+        {x: 16, y: 15.8},
+        {x: 17, y: 22.5},
+        {x: 18, y: 18.7},
       ],
       label: 'Yesterday Import',
       config: {
@@ -81,13 +119,23 @@ const mockData = {
         fillAlpha: 20,
         drawFilled: false,
         strokeDashArray: [5, 5],
-      }
+      },
     },
     yesterdayExportData: {
       values: [
-        {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0.1}, {x: 9, y: 1.5},
-        {x: 10, y: 2.8}, {x: 11, y: 3.6}, {x: 12, y: 1.8}, {x: 13, y: 0.3}, 
-        {x: 14, y: 0}, {x: 15, y: 0.6}, {x: 16, y: 0.9}, {x: 17, y: 0.2}, {x: 18, y: 0}
+        {x: 6, y: 0},
+        {x: 7, y: 0},
+        {x: 8, y: 0.1},
+        {x: 9, y: 1.5},
+        {x: 10, y: 2.8},
+        {x: 11, y: 3.6},
+        {x: 12, y: 1.8},
+        {x: 13, y: 0.3},
+        {x: 14, y: 0},
+        {x: 15, y: 0.6},
+        {x: 16, y: 0.9},
+        {x: 17, y: 0.2},
+        {x: 18, y: 0},
       ],
       label: 'Yesterday Export',
       config: {
@@ -102,34 +150,65 @@ const mockData = {
         fillAlpha: 20,
         drawFilled: false,
         strokeDashArray: [5, 5],
-      }
+      },
     },
-    xLabels: ['06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+    xLabels: [
+      '06',
+      '07',
+      '08',
+      '09',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+      '24',
+    ],
   },
   'This Month': {
     stats: {
       import: 1245.8,
       export: 287.5,
-      yesterday: 1398.2
+      yesterday: 1398.2,
     },
     voltages: {
       p1: 238,
       p2: 239,
-      p3: 236
+      p3: 236,
     },
     chartData: {
       dataSets: [
         {
           values: [
-            {x: 1, y: 8.5}, {x: 3, y: 22.1}, {x: 5, y: 19.8}, {x: 7, y: 25.3},
-            {x: 9, y: 21.7}, {x: 11, y: 28.2}, {x: 13, y: 24.6}, {x: 15, y: 26.9},
-            {x: 17, y: 23.4}, {x: 19, y: 20.8}, {x: 21, y: 27.1}, {x: 23, y: 24.3},
-            {x: 25, y: 22.7}, {x: 27, y: 25.8}, {x: 30, y: 21.9}
+            {x: 1, y: 8.5},
+            {x: 3, y: 22.1},
+            {x: 5, y: 19.8},
+            {x: 7, y: 25.3},
+            {x: 9, y: 21.7},
+            {x: 11, y: 28.2},
+            {x: 13, y: 24.6},
+            {x: 15, y: 26.9},
+            {x: 17, y: 23.4},
+            {x: 19, y: 20.8},
+            {x: 21, y: 27.1},
+            {x: 23, y: 24.3},
+            {x: 25, y: 22.7},
+            {x: 27, y: 25.8},
+            {x: 30, y: 21.9},
           ],
           label: 'Import',
           config: {
             lineWidth: 3,
-            color:processColor('#EF4444'),
+            color: processColor('#EF4444'),
             circleColor: processColor('#EF4444'),
             circleRadius: 4,
             drawCircles: true,
@@ -138,19 +217,30 @@ const mockData = {
             fillColor: processColor('#EF4444'),
             fillAlpha: 30,
             drawFilled: true,
-          }
+          },
         },
         {
           values: [
-            {x: 1, y: 2.1}, {x: 3, y: 4.8}, {x: 5, y: 3.5}, {x: 7, y: 6.2},
-            {x: 9, y: 5.1}, {x: 11, y: 7.8}, {x: 13, y: 6.4}, {x: 15, y: 8.1},
-            {x: 17, y: 5.9}, {x: 19, y: 4.2}, {x: 21, y: 7.3}, {x: 23, y: 6.7},
-            {x: 25, y: 5.4}, {x: 27, y: 8.9}, {x: 30, y: 6.1}
+            {x: 1, y: 2.1},
+            {x: 3, y: 4.8},
+            {x: 5, y: 3.5},
+            {x: 7, y: 6.2},
+            {x: 9, y: 5.1},
+            {x: 11, y: 7.8},
+            {x: 13, y: 6.4},
+            {x: 15, y: 8.1},
+            {x: 17, y: 5.9},
+            {x: 19, y: 4.2},
+            {x: 21, y: 7.3},
+            {x: 23, y: 6.7},
+            {x: 25, y: 5.4},
+            {x: 27, y: 8.9},
+            {x: 30, y: 6.1},
           ],
           label: 'Export',
           config: {
             lineWidth: 3,
-            color:  processColor('#10B981'),
+            color: processColor('#10B981'),
             circleColor: processColor('#10B981'),
             circleRadius: 4,
             drawCircles: true,
@@ -159,16 +249,27 @@ const mockData = {
             fillColor: processColor('#10B981'),
             fillAlpha: 30,
             drawFilled: true,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     yesterdayData: {
       values: [
-        {x: 1, y: 17.2}, {x: 3, y: 20.8}, {x: 5, y: 18.5}, {x: 7, y: 23.9},
-        {x: 9, y: 20.1}, {x: 11, y: 26.4}, {x: 13, y: 23.2}, {x: 15, y: 25.1},
-        {x: 17, y: 22.6}, {x: 19, y: 19.3}, {x: 21, y: 25.8}, {x: 23, y: 22.9},
-        {x: 25, y: 21.4}, {x: 27, y: 24.2}, {x: 30, y: 20.7}
+        {x: 1, y: 17.2},
+        {x: 3, y: 20.8},
+        {x: 5, y: 18.5},
+        {x: 7, y: 23.9},
+        {x: 9, y: 20.1},
+        {x: 11, y: 26.4},
+        {x: 13, y: 23.2},
+        {x: 15, y: 25.1},
+        {x: 17, y: 22.6},
+        {x: 19, y: 19.3},
+        {x: 21, y: 25.8},
+        {x: 23, y: 22.9},
+        {x: 25, y: 21.4},
+        {x: 27, y: 24.2},
+        {x: 30, y: 20.7},
       ],
       label: 'Previous Import',
       config: {
@@ -183,14 +284,25 @@ const mockData = {
         fillAlpha: 20,
         drawFilled: false,
         strokeDashArray: [5, 5],
-      }
+      },
     },
     yesterdayExportData: {
       values: [
-        {x: 1, y: 1.8}, {x: 3, y: 4.2}, {x: 5, y: 3.1}, {x: 7, y: 5.7},
-        {x: 9, y: 4.6}, {x: 11, y: 7.1}, {x: 13, y: 5.9}, {x: 15, y: 7.4},
-        {x: 17, y: 5.2}, {x: 19, y: 3.8}, {x: 21, y: 6.7}, {x: 23, y: 6.1},
-        {x: 25, y: 4.9}, {x: 27, y: 8.2}, {x: 30, y: 5.6}
+        {x: 1, y: 1.8},
+        {x: 3, y: 4.2},
+        {x: 5, y: 3.1},
+        {x: 7, y: 5.7},
+        {x: 9, y: 4.6},
+        {x: 11, y: 7.1},
+        {x: 13, y: 5.9},
+        {x: 15, y: 7.4},
+        {x: 17, y: 5.2},
+        {x: 19, y: 3.8},
+        {x: 21, y: 6.7},
+        {x: 23, y: 6.1},
+        {x: 25, y: 4.9},
+        {x: 27, y: 8.2},
+        {x: 30, y: 5.6},
       ],
       label: 'Previous Export',
       config: {
@@ -205,10 +317,27 @@ const mockData = {
         fillAlpha: 20,
         drawFilled: false,
         strokeDashArray: [5, 5],
-      }
+      },
     },
-    xLabels: ['1', '3', '1', '7', '2', '11', '3', '15', '4', '19', '5', '23', '6', '27', '7', '30']
-  }
+    xLabels: [
+      '1',
+      '3',
+      '1',
+      '7',
+      '2',
+      '11',
+      '3',
+      '15',
+      '4',
+      '19',
+      '5',
+      '23',
+      '6',
+      '27',
+      '7',
+      '30',
+    ],
+  },
 };
 
 function GridInteraction() {
@@ -226,7 +355,7 @@ function GridInteraction() {
   const getChartData = () => {
     // Always show both Import and Export lines
     let dataSets = [...currentData.chartData.dataSets];
-    
+
     // Add yesterday's data if toggle is enabled
     if (showYesterday) {
       dataSets.push(currentData.yesterdayData);
@@ -247,13 +376,10 @@ function GridInteraction() {
   const renderPeriodTabs = () => (
     <View style={styles.tabContainer}>
       <View style={styles.tabsWrapper}>
-        {periods.map((period) => (
+        {periods.map(period => (
           <TouchableOpacity
             key={period}
-            style={[
-              styles.tab,
-              selectedPeriod === period && styles.activeTab,
-            ]}
+            style={[styles.tab, selectedPeriod === period && styles.activeTab]}
             onPress={() => setSelectedPeriod(period)}>
             <Text
               style={[
@@ -274,7 +400,9 @@ function GridInteraction() {
         <View style={styles.cardHeader}>
           <View style={[styles.indicator, {backgroundColor: '#EF4444'}]} />
           <Text style={styles.cardLabel}>
-            {selectedPeriod === 'Today' ? "Today's Import" : "This Month's Import"}
+            {selectedPeriod === 'Today'
+              ? "Today's Import"
+              : "This Month's Import"}
           </Text>
         </View>
         <Text style={styles.cardValue}>{currentData.stats.import}</Text>
@@ -285,7 +413,9 @@ function GridInteraction() {
         <View style={styles.cardHeader}>
           <View style={[styles.indicator, {backgroundColor: '#10B981'}]} />
           <Text style={styles.cardLabel}>
-            {selectedPeriod === 'Today' ? "Today's Export" : "This Month's Export"}
+            {selectedPeriod === 'Today'
+              ? "Today's Export"
+              : "This Month's Export"}
           </Text>
         </View>
         <Text style={styles.cardValue}>{currentData.stats.export}</Text>
@@ -296,7 +426,9 @@ function GridInteraction() {
         <View style={styles.cardHeader}>
           <View style={[styles.indicator, {backgroundColor: '#06B6D4'}]} />
           <Text style={styles.cardLabel}>
-            {selectedPeriod === 'Today' ? "Yesterday's Total" : "Last Month's Total"}
+            {selectedPeriod === 'Today'
+              ? "Yesterday's Total"
+              : "Last Month's Total"}
           </Text>
         </View>
         <Text style={styles.cardValue}>{currentData.stats.yesterday}</Text>
@@ -308,7 +440,7 @@ function GridInteraction() {
   const renderChart = () => (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>Grid Power Graphs</Text>
-      
+
       <View style={styles.chartWrapper}>
         <LineChart
           style={styles.chart}
@@ -321,7 +453,6 @@ function GridInteraction() {
             position: 'BELOW_CHART_CENTER',
             form: 'CIRCLE',
             formSize: 8,
-            
           }}
           xAxis={{
             enabled: true,
@@ -379,10 +510,9 @@ function GridInteraction() {
   const renderToggleSwitch = (isActive, onPress, label) => (
     <TouchableOpacity style={styles.toggleOption} onPress={onPress}>
       <View style={[styles.toggle, isActive && styles.toggleActive]}>
-        <View style={[
-          styles.toggleThumb,
-          isActive && styles.toggleThumbActive
-        ]} />
+        <View
+          style={[styles.toggleThumb, isActive && styles.toggleThumbActive]}
+        />
       </View>
       <Text style={styles.toggleLabel}>{label}</Text>
     </TouchableOpacity>
@@ -393,25 +523,22 @@ function GridInteraction() {
       {renderToggleSwitch(
         showYesterday,
         () => setShowYesterday(!showYesterday),
-        "Yesterday's Data"
+        "Yesterday's Data",
       )}
     </View>
   );
 
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        
         {renderHeader()}
         {renderPeriodTabs()}
         {renderStatsCards()}
         {renderChart()}
         {renderControls()}
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -420,10 +547,11 @@ function GridInteraction() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#1E293B',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#ffff',
   },
   scrollContent: {
     paddingBottom: 100,

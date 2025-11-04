@@ -109,7 +109,7 @@ export default function AddUserForm() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <ScrollView style={styles.form}>
         <View>
           <Text

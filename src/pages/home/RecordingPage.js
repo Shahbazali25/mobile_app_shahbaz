@@ -71,13 +71,13 @@ function RecordingPage() {
     }
   };
 
-  const onLoad = (data)=>{
+  const onLoad = data => {
     console.log(data);
-  }
+  };
 
-  const onProgress = (data)=>{
+  const onProgress = data => {
     console.log(data);
-  }
+  };
 
   if (isLoading) {
     return (
@@ -94,7 +94,7 @@ function RecordingPage() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <StatusBar translucent={true} backgroundColor="black" />
       <View style={styles.container}>
         <View
@@ -118,7 +118,7 @@ function RecordingPage() {
 
           <TouchableOpacity
             onPress={recordingDelete}
-            style={{opacity: (userRole ===0 || userRole ===4)? 1: 0.4}}
+            style={{opacity: userRole === 0 || userRole === 4 ? 1 : 0.4}}
             disabled={userRole === 0 || userRole === 4 ? false : true}>
             <Image
               source={require('../../assets/imgs/icons/delete.png')}

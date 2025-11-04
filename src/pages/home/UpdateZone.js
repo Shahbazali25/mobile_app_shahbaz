@@ -15,6 +15,7 @@ function UpdateZone() {
         Content="Update Zone"
         BackAction="ZonesConfiguration"
         showThirdBtn={false}
+        textStyle={{color: '#fff'}} // 👈 White text for this screen only
       />
       <UpdateZoneForm zoneId={zoneId} />
     </SafeAreaView>
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#1E293B',
   },
 });
 

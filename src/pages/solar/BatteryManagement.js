@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, processColor} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  processColor,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LineChart} from 'react-native-charts-wrapper';
 
@@ -10,15 +18,25 @@ const mockData = {
   batteryStatus: {
     percentage: 100,
     storedPower: 9.27,
-    maxCapacity: 98
+    maxCapacity: 98,
   },
   chartData: {
     dataSets: [
       {
         values: [
-          {x: 0, y: 0}, {x: 3, y: 0}, {x: 6, y: 2.1}, {x: 7, y: -0.8}, 
-          {x: 8, y: -0.5}, {x: 9, y: 4.2}, {x: 10, y: 3.8}, {x: 11, y: 3.5},
-          {x: 12, y: -4.1}, {x: 15, y: 0}, {x: 18, y: -5.8}, {x: 21, y: 0.8}, {x: 24, y: 0}
+          {x: 0, y: 0},
+          {x: 3, y: 0},
+          {x: 6, y: 2.1},
+          {x: 7, y: -0.8},
+          {x: 8, y: -0.5},
+          {x: 9, y: 4.2},
+          {x: 10, y: 3.8},
+          {x: 11, y: 3.5},
+          {x: 12, y: -4.1},
+          {x: 15, y: 0},
+          {x: 18, y: -5.8},
+          {x: 21, y: 0.8},
+          {x: 24, y: 0},
         ],
         label: 'Battery Usage',
         config: {
@@ -32,15 +50,25 @@ const mockData = {
           fillColor: '#06B6D4',
           fillAlpha: 30,
           drawFilled: true,
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   yesterdayData: {
     values: [
-      {x: 0, y: 2}, {x: 3, y: 3}, {x: 6, y: 1.8}, {x: 7, y: -5.6}, 
-      {x: 8, y: -2.3}, {x: 9, y: 1.8}, {x: 10, y: 1.2}, {x: 11, y:2.1},
-      {x: 12, y: -1.7}, {x: 15, y: 1.5}, {x: 18, y: -3.2}, {x: 21, y: 1.6}, {x: 24, y: 2.2}
+      {x: 0, y: 2},
+      {x: 3, y: 3},
+      {x: 6, y: 1.8},
+      {x: 7, y: -5.6},
+      {x: 8, y: -2.3},
+      {x: 9, y: 1.8},
+      {x: 10, y: 1.2},
+      {x: 11, y: 2.1},
+      {x: 12, y: -1.7},
+      {x: 15, y: 1.5},
+      {x: 18, y: -3.2},
+      {x: 21, y: 1.6},
+      {x: 24, y: 2.2},
     ],
     label: 'Yesterday',
     config: {
@@ -55,9 +83,9 @@ const mockData = {
       fillAlpha: 20,
       drawFilled: false,
       strokeDashArray: [5, 5],
-    }
+    },
   },
-  xLabels: ['00', '03', '06', '09', '12', '15', '18', '21', '24']
+  xLabels: ['00', '03', '06', '09', '12', '15', '18', '21', '24'],
 };
 
 function BatteryManagement() {
@@ -67,7 +95,7 @@ function BatteryManagement() {
 
   const getChartData = () => {
     let dataSets = [mockData.chartData.dataSets[0]];
-    
+
     if (showYesterday) {
       dataSets.push(mockData.yesterdayData);
     }
@@ -85,15 +113,17 @@ function BatteryManagement() {
     <View style={styles.batteryStatusContainer}>
       <View style={styles.batteryIconContainer}>
         <Text style={styles.batteryIcon}>🔋</Text>
-        <Text style={styles.batteryPercentage}>{mockData.batteryStatus.percentage}%</Text>
+        <Text style={styles.batteryPercentage}>
+          {mockData.batteryStatus.percentage}%
+        </Text>
       </View>
       <View style={styles.progressBarContainer}>
         <View style={styles.progressBarBackground}>
-          <View 
+          <View
             style={[
-              styles.progressBar, 
-              {width: `${mockData.batteryStatus.percentage}%`}
-            ]} 
+              styles.progressBar,
+              {width: `${mockData.batteryStatus.percentage}%`},
+            ]}
           />
         </View>
       </View>
@@ -107,7 +137,9 @@ function BatteryManagement() {
           <View style={[styles.indicator, {backgroundColor: '#10B981'}]} />
           <Text style={styles.cardLabel}>Stored Power</Text>
         </View>
-        <Text style={styles.cardValue}>{mockData.batteryStatus.storedPower}</Text>
+        <Text style={styles.cardValue}>
+          {mockData.batteryStatus.storedPower}
+        </Text>
         <Text style={styles.cardUnit}>kWh</Text>
       </View>
 
@@ -116,7 +148,9 @@ function BatteryManagement() {
           <View style={[styles.indicator, {backgroundColor: '#3B82F6'}]} />
           <Text style={styles.cardLabel}>Maximum Capacity</Text>
         </View>
-        <Text style={styles.cardValue}>{mockData.batteryStatus.maxCapacity}</Text>
+        <Text style={styles.cardValue}>
+          {mockData.batteryStatus.maxCapacity}
+        </Text>
         <Text style={styles.cardUnit}>%</Text>
       </View>
     </View>
@@ -125,7 +159,7 @@ function BatteryManagement() {
   const renderChart = () => (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>Battery Usage Graph</Text>
-      
+
       <View style={styles.chartWrapper}>
         <LineChart
           style={styles.chart}
@@ -201,10 +235,9 @@ function BatteryManagement() {
   const renderToggleSwitch = (isActive, onPress, label) => (
     <TouchableOpacity style={styles.toggleOption} onPress={onPress}>
       <View style={[styles.toggle, isActive && styles.toggleActive]}>
-        <View style={[
-          styles.toggleThumb,
-          isActive && styles.toggleThumbActive
-        ]} />
+        <View
+          style={[styles.toggleThumb, isActive && styles.toggleThumbActive]}
+        />
       </View>
       <Text style={styles.toggleLabel}>{label}</Text>
     </TouchableOpacity>
@@ -215,24 +248,22 @@ function BatteryManagement() {
       {renderToggleSwitch(
         showYesterday,
         () => setShowYesterday(!showYesterday),
-        "Yesterday's Data"
+        "Yesterday's Data",
       )}
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        
         {renderHeader()}
         {renderBatteryStatus()}
         {renderStatsCards()}
         {renderChart()}
         {renderControls()}
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -241,10 +272,11 @@ function BatteryManagement() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#1E293B',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#ffff',
   },
   scrollContent: {
     paddingBottom: 100,
@@ -323,7 +355,7 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom:4,
+    marginBottom: 4,
   },
   indicator: {
     width: 4,

@@ -12,11 +12,11 @@ function FullViewStream() {
   console.log(stream_link, camera_name);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <StatusBar translucent={true} backgroundColor="black" />
       <View style={styles.container}>
         <NavBar
-          Content={camera_name+" Live Streaming"}
+          Content={camera_name + ' Live Streaming'}
           BackAction="Cameras"
           showThirdBtn={false}
           goBack={true}

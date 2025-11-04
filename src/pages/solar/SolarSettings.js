@@ -73,8 +73,8 @@ function SolarSettings() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <StatusBar translucent={false} backgroundColor="#FFFFFF" />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+      <StatusBar translucent={false} backgroundColor="#1E293B" />
       <View style={styles.container}>
         <NavBar Content="Settings" BackAction="Home" showThirdBtn={false} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>

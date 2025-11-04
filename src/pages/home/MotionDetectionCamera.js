@@ -8,7 +8,7 @@ import MotionDetectionForm from '../../layouts/forms/motionDetectionForm';
 function MotionDetectionCamera() {
   const route = useRoute();
   const camera_id = route.params?.camera_id;
-  const stream_link = route.params?.stream_link
+  const stream_link = route.params?.stream_link;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#1E293B',
   },
 });
 

@@ -71,7 +71,7 @@ export default function NewPassword() {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <ImageBackground
         source={require('../../../assets/imgs/onboarding-bg.png')}
         style={[styles.container, {width: '100%'}]}

@@ -25,6 +25,7 @@ function UpdateSensor() {
         Content="Update Sensor"
         BackAction="SensorSetup"
         showThirdBtn={false}
+        textStyle={{color: '#fff'}} // 👈 White text for this screen only
       />
       <UpdateSensorForm
         sensorId={sensorId}
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#1E293B',
   },
 });
 

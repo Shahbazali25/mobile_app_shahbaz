@@ -154,7 +154,7 @@ function ModesConfiguration() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <View style={styles.container}>
         <NavBar
           Content="Modes Configuration"
@@ -192,6 +192,7 @@ function ModesConfiguration() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   loadingContainer: {
     flex: 1,

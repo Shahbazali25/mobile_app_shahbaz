@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  StatusBar,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -58,7 +59,11 @@ function AccountManagement() {
 
     const handleEdit = () => {
       console.log('Edit:', item.id);
-      navigation.navigate('EditUser', {user_id: item.id, cloud_id: item.cloud_id, name: item.firstName+' '+item.lastName});
+      navigation.navigate('EditUser', {
+        user_id: item.id,
+        cloud_id: item.cloud_id,
+        name: item.firstName + ' ' + item.lastName,
+      });
       setMenuVisible(null);
     };
 
@@ -152,6 +157,12 @@ function AccountManagement() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#c99f9fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/loading.json')}
@@ -164,7 +175,7 @@ function AccountManagement() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <View style={styles.container}>
         <NavBar
           Content="Accounts Management"
@@ -214,6 +225,7 @@ function AccountManagement() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   loadingContainer: {
     flex: 1,

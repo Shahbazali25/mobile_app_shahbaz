@@ -205,8 +205,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   detectionTypeOption: {
-    padding: 8,
-    margin: '3%',
+    padding: '2%',
+    marginVertical: '3%',
+    marginHorizontal: '1%',
     borderWidth: 1,
     borderColor: '#c5c5d3ff',
     borderRadius: 5,

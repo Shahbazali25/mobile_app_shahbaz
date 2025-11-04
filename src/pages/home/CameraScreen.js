@@ -1155,6 +1155,12 @@ function CameraScreen() {
   if (isLoading) {
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content" // or "light-content" depending on background
+          backgroundColor="#fff" // match your loader bg color
+          translucent={false} // ensures it’s visible
+          hidden={false} // 👈 explicitly show it
+        />
         <AnimatedLottieView
           ref={animation}
           source={require('../../assets/animations/camera-animation.json')}
@@ -1761,11 +1767,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   selectedCameraItem: {
-    backgroundColor: '#75718aff',
+    backgroundColor: '#485977ff',
   },
 
   selectedCameraItemText: {
-    color: '#ebe9f0ff',
+    color: '#ffffffff',
   },
   submitButton: {
     backgroundColor: '#1B3C55',
@@ -1791,9 +1797,11 @@ const styles = StyleSheet.create({
   },
   homeSafeArea: {
     flex: 1,
+    backgroundColor: '#1E293B',
   },
   homeScreenContainer: {
     flex: 1,
+    backgroundColor: '#ffffffff',
   },
   scrollViewContent: {
     flexGrow: 1,

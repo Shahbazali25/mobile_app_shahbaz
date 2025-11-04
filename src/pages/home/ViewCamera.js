@@ -360,7 +360,7 @@ function ViewCamera() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <StatusBar translucent={true} backgroundColor="black" />
       <View style={styles.container}>
         <NavBar

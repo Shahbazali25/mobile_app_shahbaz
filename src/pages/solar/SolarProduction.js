@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, processColor} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  processColor,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LineChart} from 'react-native-charts-wrapper';
 
@@ -13,9 +21,19 @@ const mockData = {
       dataSets: [
         {
           values: [
-            {x: 6, y: 0.2}, {x: 7, y: 1.8}, {x: 8, y: 3.5}, {x: 9, y: 5.2},
-            {x: 10, y: 7.8}, {x: 11, y: 9.1}, {x: 12, y: 10.5}, {x: 13, y: 9.8},
-            {x: 14, y: 8.5}, {x: 15, y: 6.2}, {x: 16, y: 4.1}, {x: 17, y: 2.5}, {x: 18, y: 0.8}
+            {x: 6, y: 0.2},
+            {x: 7, y: 1.8},
+            {x: 8, y: 3.5},
+            {x: 9, y: 5.2},
+            {x: 10, y: 7.8},
+            {x: 11, y: 9.1},
+            {x: 12, y: 10.5},
+            {x: 13, y: 9.8},
+            {x: 14, y: 8.5},
+            {x: 15, y: 6.2},
+            {x: 16, y: 4.1},
+            {x: 17, y: 2.5},
+            {x: 18, y: 0.8},
           ],
           label: 'Today',
           config: {
@@ -29,15 +47,25 @@ const mockData = {
             fillColor: '#7C3AED',
             fillAlpha: 50,
             drawFilled: true,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     yesterdayData: {
       values: [
-        {x: 6, y: 0.1}, {x: 7, y: 1.2}, {x: 8, y: 2.8}, {x: 9, y: 4.1},
-        {x: 10, y: 6.5}, {x: 11, y: 8.2}, {x: 12, y: 9.8}, {x: 13, y: 10.2},
-        {x: 14, y: 8.9}, {x: 15, y: 7.1}, {x: 16, y: 5.3}, {x: 17, y: 3.2}, {x: 18, y: 1.1}
+        {x: 6, y: 0.1},
+        {x: 7, y: 1.2},
+        {x: 8, y: 2.8},
+        {x: 9, y: 4.1},
+        {x: 10, y: 6.5},
+        {x: 11, y: 8.2},
+        {x: 12, y: 9.8},
+        {x: 13, y: 10.2},
+        {x: 14, y: 8.9},
+        {x: 15, y: 7.1},
+        {x: 16, y: 5.3},
+        {x: 17, y: 3.2},
+        {x: 18, y: 1.1},
       ],
       label: 'Yesterday',
       config: {
@@ -51,9 +79,29 @@ const mockData = {
         fillColor: processColor('red'),
         fillAlpha: 30,
         drawFilled: true,
-      }
+      },
     },
-    xLabels: ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+    xLabels: [
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+      '24',
+    ],
   },
   'This Month': {
     production: {today: 945.2, yesterday: 912.7, total: 945.2},
@@ -62,7 +110,7 @@ const mockData = {
         {
           values: Array.from({length: 15}, (_, i) => ({
             x: i + 1,
-            y: Math.random() * 40 + 20
+            y: Math.random() * 40 + 20,
           })),
           label: 'This Month',
           config: {
@@ -76,14 +124,14 @@ const mockData = {
             fillColor: '#7C3AED',
             fillAlpha: 50,
             drawFilled: true,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     yesterdayData: {
       values: Array.from({length: 15}, (_, i) => ({
         x: i + 1,
-        y: Math.random() * 35 + 18
+        y: Math.random() * 35 + 18,
       })),
       label: 'Last Month',
       config: {
@@ -97,9 +145,9 @@ const mockData = {
         fillColor: processColor('red'),
         fillAlpha: 30,
         drawFilled: true,
-      }
+      },
     },
-    xLabels: Array.from({length: 15}, (_, i) => `${i + 1}`)
+    xLabels: Array.from({length: 15}, (_, i) => `${i + 1}`),
   },
   'This Year': {
     production: {today: 11250.5, yesterday: 10890.3, total: 11250.5},
@@ -107,9 +155,18 @@ const mockData = {
       dataSets: [
         {
           values: [
-            {x: 0, y: 850}, {x: 1, y: 920}, {x: 2, y: 1100}, {x: 3, y: 1280},
-            {x: 4, y: 1450}, {x: 5, y: 1520}, {x: 6, y: 1580}, {x: 7, y: 1520},
-            {x: 8, y: 1380}, {x: 9, y: 1150}, {x: 10, y: 920}, {x: 11, y: 780}
+            {x: 0, y: 850},
+            {x: 1, y: 920},
+            {x: 2, y: 1100},
+            {x: 3, y: 1280},
+            {x: 4, y: 1450},
+            {x: 5, y: 1520},
+            {x: 6, y: 1580},
+            {x: 7, y: 1520},
+            {x: 8, y: 1380},
+            {x: 9, y: 1150},
+            {x: 10, y: 920},
+            {x: 11, y: 780},
           ],
           label: 'This Year',
           config: {
@@ -123,15 +180,24 @@ const mockData = {
             fillColor: '#7C3AED',
             fillAlpha: 50,
             drawFilled: true,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     yesterdayData: {
       values: [
-        {x: 0, y: 780}, {x: 1, y: 850}, {x: 2, y: 1050}, {x: 3, y: 1200},
-        {x: 4, y: 1380}, {x: 5, y: 1480}, {x: 6, y: 1520}, {x: 7, y: 1490},
-        {x: 8, y: 1350}, {x: 9, y: 1120}, {x: 10, y: 890}, {x: 11, y: 750}
+        {x: 0, y: 780},
+        {x: 1, y: 850},
+        {x: 2, y: 1050},
+        {x: 3, y: 1200},
+        {x: 4, y: 1380},
+        {x: 5, y: 1480},
+        {x: 6, y: 1520},
+        {x: 7, y: 1490},
+        {x: 8, y: 1350},
+        {x: 9, y: 1120},
+        {x: 10, y: 890},
+        {x: 11, y: 750},
       ],
       label: 'Last Year',
       config: {
@@ -145,10 +211,23 @@ const mockData = {
         fillColor: processColor('red'),
         fillAlpha: 30,
         drawFilled: true,
-      }
+      },
     },
-    xLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  }
+    xLabels: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ],
+  },
 };
 
 function SolarProduction() {
@@ -164,17 +243,21 @@ function SolarProduction() {
   const filterOptions = ['All', 'Morning', 'Afternoon', 'Evening'];
 
   const getUnit = () => {
-    switch(selectedPeriod) {
-      case 'Today': return 'kWh';
-      case 'This Month': return 'kWh';
-      case 'This Year': return 'MWh';
-      default: return 'kWh';
+    switch (selectedPeriod) {
+      case 'Today':
+        return 'kWh';
+      case 'This Month':
+        return 'kWh';
+      case 'This Year':
+        return 'MWh';
+      default:
+        return 'kWh';
     }
   };
 
   const getChartData = () => {
     let dataSets = [currentData.chartData.dataSets[0]];
-    
+
     if (showYesterday) {
       dataSets.push(currentData.yesterdayData);
     }
@@ -184,15 +267,20 @@ function SolarProduction() {
       const totalPoints = currentData.chartData.dataSets[0].values.length;
       const filteredSets = dataSets.map(dataSet => {
         let filteredValues = dataSet.values;
-        
+
         if (filterType === 'Morning') {
           filteredValues = dataSet.values.slice(0, Math.floor(totalPoints / 3));
         } else if (filterType === 'Afternoon') {
-          filteredValues = dataSet.values.slice(Math.floor(totalPoints / 3), Math.floor(totalPoints * 2 / 3));
+          filteredValues = dataSet.values.slice(
+            Math.floor(totalPoints / 3),
+            Math.floor((totalPoints * 2) / 3),
+          );
         } else if (filterType === 'Evening') {
-          filteredValues = dataSet.values.slice(Math.floor(totalPoints * 2 / 3));
+          filteredValues = dataSet.values.slice(
+            Math.floor((totalPoints * 2) / 3),
+          );
         }
-        
+
         return {...dataSet, values: filteredValues};
       });
       dataSets = filteredSets;
@@ -213,13 +301,10 @@ function SolarProduction() {
   const renderPeriodTabs = () => (
     <View style={styles.tabContainer}>
       <View style={styles.tabsWrapper}>
-        {periods.map((period) => (
+        {periods.map(period => (
           <TouchableOpacity
             key={period}
-            style={[
-              styles.tab,
-              selectedPeriod === period && styles.activeTab,
-            ]}
+            style={[styles.tab, selectedPeriod === period && styles.activeTab]}
             onPress={() => setSelectedPeriod(period)}>
             <Text
               style={[
@@ -247,7 +332,9 @@ function SolarProduction() {
 
       <View style={[styles.productionCard, styles.secondaryCard]}>
         <View style={styles.cardHeader}>
-          <View style={[styles.indicator, {backgroundColor: processColor('red')}]} />
+          <View
+            style={[styles.indicator, {backgroundColor: processColor('red')}]}
+          />
           <Text style={styles.cardLabel}>Previous Period</Text>
         </View>
         <Text style={styles.cardValue}>{currentData.production.yesterday}</Text>
@@ -268,7 +355,7 @@ function SolarProduction() {
   const renderChart = () => (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>Energy Production Trends</Text>
-      
+
       <View style={styles.chartWrapper}>
         <LineChart
           style={styles.chart}
@@ -334,43 +421,39 @@ function SolarProduction() {
     </View>
   );
 
- const renderToggleSwitch = (isActive, onPress, label) => (
-     <TouchableOpacity style={styles.toggleOption} onPress={onPress}>
-       <View style={[styles.toggle, isActive && styles.toggleActive]}>
-         <View style={[
-           styles.toggleThumb,
-           isActive && styles.toggleThumbActive
-         ]} />
-       </View>
-       <Text style={styles.toggleLabel}>{label}</Text>
-     </TouchableOpacity>
-   );
+  const renderToggleSwitch = (isActive, onPress, label) => (
+    <TouchableOpacity style={styles.toggleOption} onPress={onPress}>
+      <View style={[styles.toggle, isActive && styles.toggleActive]}>
+        <View
+          style={[styles.toggleThumb, isActive && styles.toggleThumbActive]}
+        />
+      </View>
+      <Text style={styles.toggleLabel}>{label}</Text>
+    </TouchableOpacity>
+  );
   const renderControls = () => (
     <View style={styles.controlsContainer}>
       <View style={styles.toggleContainer}>
         {renderToggleSwitch(
           showYesterday,
           () => setShowYesterday(!showYesterday),
-          "Yesterday's Data"
+          "Yesterday's Data",
         )}
       </View>
     </View>
   );
 
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        
         {renderHeader()}
         {renderPeriodTabs()}
         {renderProductionCards()}
         {renderChart()}
         {renderControls()}
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -379,10 +462,11 @@ function SolarProduction() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#1E293B',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#ffff',
   },
   scrollContent: {
     paddingBottom: 100,
@@ -551,7 +635,7 @@ const styles = StyleSheet.create({
     color: '#1E293B',
     marginBottom: 15,
   },
-   controlsContainer: {
+  controlsContainer: {
     marginHorizontal: 20,
     marginBottom: 20,
     backgroundColor: 'white',

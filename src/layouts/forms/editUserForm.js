@@ -1,12 +1,19 @@
 import {React, useState, useRef, useEffect} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
 import PrimaryBtn from '../buttons/primaryBtn';
 import errorMessage from '../../components/utils/errorMessage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getSpecificUser} from '../../components/apis/users/getSpecificUser';
 import UpdateUserRole from './updateUserRole';
-import { updateUserProfile } from '../../components/apis/users/updateUserProfile';
+import {updateUserProfile} from '../../components/apis/users/updateUserProfile';
 
 export default function EditUserForm({user_id, cloud_id}) {
   const animation = useRef(null);
@@ -39,19 +46,19 @@ export default function EditUserForm({user_id, cloud_id}) {
     setLoading(true);
     try {
       const response = await updateUserProfile(
-          firstName,
-          lastName,
-          email,
-          password,
-          user_id
+        firstName,
+        lastName,
+        email,
+        password,
+        user_id,
       );
       if (response === 200) {
         Toast.show({
-        type: 'success',
-        text1: 'User Updated',
-        text2: 'User Updated Succesfully',
+          type: 'success',
+          text1: 'User Updated',
+          text2: 'User Updated Succesfully',
         });
-    }
+      }
     } catch (error) {
       errorMessage('Camera Creation Error', error.message);
     } finally {
@@ -74,7 +81,7 @@ export default function EditUserForm({user_id, cloud_id}) {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <ScrollView style={styles.form}>
         <View>
           <Text
@@ -225,7 +232,7 @@ const styles = StyleSheet.create({
         }
       : {}),
 
-       padding:Platform.select({ios:10, android:10})
+    padding: Platform.select({ios: 10, android: 10}),
   },
   inputFields: {
     marginVertical: 6,
