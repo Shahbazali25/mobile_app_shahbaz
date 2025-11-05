@@ -260,7 +260,7 @@ function ZonesConfiguration() {
             Zones
           </Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('AddZone')}
+            onPress={() => navigation.navigate('AddCameraZone')}
             style={styles.button}>
             <Text
               style={{

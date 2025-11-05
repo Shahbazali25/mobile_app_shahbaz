@@ -164,7 +164,7 @@ export default function UpdateZoneForm({zoneId}) {
                 onPress={() => toggleDetectionType(type)}>
                 <Image
                   source={zoneIcons[type]}
-                  style={{width: 35, height: 45, marginHorizontal: '1%'}}
+                  style={{width: 45, height: 45, marginHorizontal: '1%'}}
                 />
               </TouchableOpacity>
             ))}

@@ -133,7 +133,7 @@ export default function AddCameraZoneForm() {
                 onPress={() => toggleDetectionType(type)}>
                 <Image
                   source={zoneIcons[type]}
-                  style={{width: 45, height: 45, marginHorizontal: 3}}
+                  style={{width: 45, height: 45, marginHorizontal: '1%'}}
                 />
               </TouchableOpacity>
             ))}
@@ -174,10 +174,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   detectionTypeOption: {
-    padding: 8,
-    margin: 5,
+    padding: '2%',
+    marginVertical: '3%',
+    marginHorizontal: '1%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#c5c5d3ff',
     borderRadius: 5,
   },
   selectedDetectionType: {
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   formLabel: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'Poppins-Regular',
   },
   sectionLabel: {
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
       ? {textAlignVertical: 'center', includeFontPadding: false}
       : {}),
 
-      padding:Platform.select({ios:10, android:10})
+    padding: Platform.select({ios: 10, android: 10}),
   },
   inputFields: {
     marginVertical: 6,

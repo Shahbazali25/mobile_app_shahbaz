@@ -12,6 +12,7 @@ function AddUser() {
         Content="Add New User"
         BackAction="AccountManagement"
         showThirdBtn={false}
+        textStyle={{color: '#fff'}}
       />
       <AddUserForm />
     </SafeAreaView>

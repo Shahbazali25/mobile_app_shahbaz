@@ -17,7 +17,7 @@ function AddCamera() {
           Content="Add New Camera"
           BackAction="Cameras"
           showThirdBtn={false}
-          textStyle={{color: '#d5d7e2ff'}} // 👈 White text for this screen only
+          textStyle={{color: '#fff'}}
         />
       </View>
       <AddCameraForm />

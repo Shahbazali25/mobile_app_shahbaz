@@ -850,6 +850,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 15,
     borderRadius: 30,
+    minHeight: 170,
   },
 
   form: {

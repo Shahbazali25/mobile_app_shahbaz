@@ -12,6 +12,7 @@ function AddCameraZone() {
         Content="Add Zone"
         BackAction="ZonesConfiguration"
         showThirdBtn={false}
+        textStyle={{color: '#fff'}}
       />
       <AddCameraZoneForm />
     </SafeAreaView>
