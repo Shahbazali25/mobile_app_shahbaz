@@ -15,8 +15,10 @@ function UpdateCamera() {
       <NavBar
         Content="Update Camera"
         BackAction="Cameras"
-        showThirdBtn={false}
+        showThirdBtn={true}
         goBack={true}
+                  textStyle={{color: '#fff'}} // 👈 make heading text white
+
       />
       <UpdateCameraForm camera_id={camera_id} />
     </SafeAreaView>

@@ -11,6 +11,7 @@ import {
   ScrollView,
   Switch,
   Dimensions,
+  TouchableWithoutFeedback, Keyboard 
 } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import AnimatedLottieView from 'lottie-react-native';
@@ -937,9 +938,22 @@ function CameraScreen() {
     const hasHls = item.cloudHls;
     const isMenuOpen = menuVisible === item.id;
 
+    
+    
+    
     const handleMenuToggle = () => {
       setMenuVisible(isMenuOpen ? null : item.id);
     };
+    const handleOutsidePress = () => {
+      console.log(" im called, close menu");
+        setMenuVisible(null);
+     
+    };
+        let rtcUrl = hasHls
+        ?.replace('port/8888', 'rtc')
+        .replace('/index.m3u8', '/');
+      console.log('\n\n\n\n  *****  %%%  ***** \n\n item:', item);
+      console.log('\n\n\n rtcUrl:', rtcUrl, '\n\n');
 
     const handleDelete = () => {
       setCameraToDelete(item);
@@ -989,6 +1003,8 @@ function CameraScreen() {
     };
 
     return (
+    <TouchableWithoutFeedback onPress={handleOutsidePress}>
+
       <View style={styles.cameraContainer}>
         <View
           style={{
@@ -1038,6 +1054,8 @@ function CameraScreen() {
             />
           </TouchableOpacity>
           {isMenuOpen && (
+            <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+
             <View style={styles.menuContainer}>
               <TouchableOpacity
                 style={[
@@ -1121,11 +1139,12 @@ function CameraScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
+            </TouchableWithoutFeedback>
           )}
         </View>
         {hasHls ? (
           <View>
-            <VLCPlayer
+            {/* <VLCPlayer
               source={{uri: item.cloudHls}}
               style={styles.videoPlayer}
               autoPlay={true}
@@ -1139,7 +1158,29 @@ function CameraScreen() {
                 ':clock-jitter': 0,
                 ':clock-synchro': 0,
               }}
-            />
+            /> */}
+
+             <WebrtcWebView
+                  rtcUrl={rtcUrl}
+                  height={186}
+                  onError={syntheticEvent => {
+                    const {nativeEvent} = syntheticEvent;
+                    console.error('WebView error: ', nativeEvent);
+                  }}
+                  onMessage={event => {
+                    try {
+                      const data = JSON.parse(event.nativeEvent.data);
+                      console.log(`[WebRTC ${data.type}]:`, data.message);
+                    } catch (e) {
+                      console.log('WebView message:', event.nativeEvent.data);
+                    }
+                  }}
+                  onLoadEnd={() => {
+                    console.log('WebView loaded');
+                  }}
+                />
+
+
           </View>
         ) : (
           <Image
@@ -1149,6 +1190,8 @@ function CameraScreen() {
           />
         )}
       </View>
+    </TouchableWithoutFeedback>
+
     );
   };
 
@@ -1808,7 +1851,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   cameraContainer: {
-    width: 300,
+    width: 330,
     backgroundColor: 'white',
     borderRadius: 10,
     marginVertical: 12,
