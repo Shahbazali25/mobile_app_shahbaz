@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
 import NavBar from '../../layouts/navigations/navbar';
@@ -12,13 +12,17 @@ function RealTimeAlertsCamera() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent={true} />
+      <View 
+            style = {{ backgroundColor: '#ffff', height : '100%'}} >
+
       <NavBar
-        Content={`Real Time Alerts of ${camera.name}`}
+        Content={`Real Time Alerts\n ${camera.name}`}
         BackAction="Cameras"
         showThirdBtn={false}
         goBack={true}
       />
       <RealTimeAlertForm camera_id={camera.network_id} />
+      </View>
     </SafeAreaView>
   );
 }

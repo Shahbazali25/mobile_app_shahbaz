@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
 import NavBar from '../../layouts/navigations/navbar';
@@ -13,13 +13,18 @@ function MotionDetectionCamera() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent={true} />
+      <View 
+      style = {{ backgroundColor: '#ffff', height : '100%'}} >
       <NavBar
         Content="Motion Detection"
         BackAction="Cameras"
         showThirdBtn={false}
         goBack={true}
+        
       />
-      <MotionDetectionForm camera_id={camera_id} stream_link={stream_link} />
+        <MotionDetectionForm camera_id={camera_id} stream_link={stream_link} />
+
+      </View>
     </SafeAreaView>
   );
 }

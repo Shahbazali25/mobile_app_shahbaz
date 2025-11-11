@@ -17,7 +17,7 @@ function UpdateCamera() {
         BackAction="Cameras"
         showThirdBtn={true}
         goBack={true}
-                  textStyle={{color: '#fff'}} // 👈 make heading text white
+        textStyle={{color: '#fff'}}
 
       />
       <UpdateCameraForm camera_id={camera_id} />

@@ -854,7 +854,7 @@ function Cameras({userData}) {
               ),
             </Text>
             <Text style={{fontSize: 12, fontFamily: 'Poppins-Regular'}}>
-              Welcome to ibexEye!
+              Welcome to ibexeYe360°™
             </Text>
           </View>
         </View>

@@ -558,7 +558,12 @@ function CameraScreen() {
             alignItems: 'center',
             padding: 20,
           }}>
-          <Text>No Stream Available for this camera</Text>
+            <Image
+            source={require('../../assets/imgs/stream-na.png')}
+            style={styles.cameraImage2}
+            resizeMode="cover"
+          />
+          {/* <Text>No Stream Available for this camera</Text> */}
         </View>
       );
 
@@ -1653,6 +1658,10 @@ const styles = StyleSheet.create({
   cameraImage: {
     width: '100%',
     height: '100%',
+  },
+  cameraImage2: {
+    width: '90%',
+    height: '120%',
   },
   streamLabel: {
     position: 'absolute',
