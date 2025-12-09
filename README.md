@@ -109,3 +109,7 @@ cd ios
 pod install
 
 
+
+
+https://github.com/meliorence/react-native-snap-carousel/issues/1017
+
