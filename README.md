@@ -112,4 +112,4 @@ pod install
 
 
 https://github.com/meliorence/react-native-snap-carousel/issues/1017
-
+follow this link guidence to solve 'style' error,  like replace the 'view.propTypes.style' with 'ViewStyle' in nodemodule/react-native-snap-carousel  .  then run this command to patch package, ==>  npx patch-package react-native-snap-carousel
