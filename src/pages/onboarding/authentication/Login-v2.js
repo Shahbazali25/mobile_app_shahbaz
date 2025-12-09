@@ -12,7 +12,7 @@ export default function LoginV2() {
           
         <View
           style={{
-            flex: 0.64,
+            flex: 0.65,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-end',

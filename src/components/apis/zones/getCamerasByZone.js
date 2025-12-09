@@ -27,12 +27,13 @@ export const getCameraByZone = async zoneId => {
       throw new Error('No Zone Found of camera');
     }
 
-    // console.log('✅ Cameras Fetched:', cameraZone.data);
-    // console.log('✅ Cameras Fetched Detail:', cameraZone.data.data.cameras);
+    console.log('✅ Cameras Fetched:', cameraZone.data);
+    console.log('✅ Cameras Fetched Detail:', cameraZone.data.data.cameras);
     return cameraZone.data.data.cameras.map(camera => ({
       id: camera.id ?? 'Undefined',
       name: camera.name || 'Unnamed Camera',
-      localHls: camera.stream_links?.cloud?.hls || null,
+      localHls: camera.stream_links?.local?.hls || null,
+      cloudHls: camera.stream_links?.cloud?.hls || null,
       network_id: camera.networkId,
     }));
   } catch (error) {

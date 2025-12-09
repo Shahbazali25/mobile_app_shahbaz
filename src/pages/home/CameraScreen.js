@@ -13,13 +13,16 @@ import {
   Dimensions,
   TouchableWithoutFeedback, Keyboard 
 } from 'react-native';
+import {screenWidth} from '../../components/utils/constants';
+import {changeScreen} from '../../components/navigation/changeScreen';
+import Video from 'react-native-video';
+
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import AnimatedLottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {VLCPlayer} from 'react-native-vlc-media-player';
 
-import {WebView} from 'react-native-webview';
 import WebrtcWebView from '../../components/WebrtcWebView';
 
 import NavBar from '../../layouts/navigations/navbar';
@@ -27,7 +30,6 @@ import {getAllCameras} from '../../components/apis/cameras/getAllCameras';
 import {deleteCamera} from '../../components/apis/cameras/deleteCamera';
 import {startStream} from '../../components/apis/cameras/stream/startStream';
 import {stopStream} from '../../components/apis/cameras/stream/stopStream';
-import LayoutToggleBtn from '../../layouts/buttons/layoutToggleBtn';
 import shortenName from '../../components/utils/shortenName';
 import errorMessage from '../../components/utils/errorMessage';
 import successMessage from '../../components/utils/successMessage';
@@ -112,7 +114,7 @@ function CameraScreen() {
         }
 
         const fetchedCameras = await getAllCameras();
-        console.log(fetchedCameras);
+        console.log("\n\n\n\n\n  totallllll ",fetchedCameras);
         setCameras(fetchedCameras);
         const storedSelectedCameras = await loadLayoutFromStorage();
         const validatedSelectedCameras = storedSelectedCameras.filter(
@@ -233,11 +235,10 @@ function CameraScreen() {
   const toggleCameraSelection = async camera => {
     const isSelected = selectedCamerasForGrid.some(c => c.id === camera.id);
 
-    // Special case for single grid: always replace selection
     if (selectedGrid === 1) {
-      setSelectedCamerasForGrid([]); // First deselect
-      await new Promise(resolve => setTimeout(resolve, 0)); // Allow state update
-      setSelectedCamerasForGrid([camera]); // Then select new camera
+      setSelectedCamerasForGrid([]); 
+      await new Promise(resolve => setTimeout(resolve, 0));
+      setSelectedCamerasForGrid([camera]);
       return;
     }
     console.log('im here broo \n\n\n');
@@ -286,7 +287,6 @@ function CameraScreen() {
     );
     console.log('***Selected Cameras Grid:', selectedCamerasForGrid);
 
-    // Prioritize selected cameras for grid
     if (selectedCamerasForGrid && selectedCamerasForGrid.length > 0) {
       const selectedCamera = selectedCamerasForGrid[0];
       console.log('Selected Camera:', selectedCamera);
@@ -305,74 +305,23 @@ function CameraScreen() {
             }>
             {renderCameraVideo(selectedCamera, '100%', 285)}
 
-            {/* <VLCPlayer
-              source={{uri: selectedCamera.cloudHls}}
-              style={[styles.videoPlayer, {height: 400, width: '100%'}]}
-              autoPlay={true}
-              muted={true}
-              mediaOptions={{
-                ':network-caching': 150,
-                ':live-caching': 0,
-                ':file-caching': 0,
-                ':network-caching': 150,
-                ':clock-jitter': 0,
-                ':clock-synchro': 0,
-              }}
-            /> */}
+
           </TouchableOpacity>
         );
       }
     }
 
-    // Fallback to first camera in cameras array
-    // if (cameras && cameras.length > 0 && cameras[0].cloudHls) {
-    //   console.log('\n\n\n ****\n\nFalling back to first camera   \n\n\n\n\n\n');
-    //   return (
-    //     renderCameraVideo(cameras[0], '100%', 215)
-
-    //     // <TouchableOpacity
-    //     //   style={{width: '100%', height: 400}}
-    //     //   onPress={() =>
-    //     //     navigation.navigate('ViewCamera', {
-    //     //       camera_id: cameras[0].network_id,
-    //     //       stream_link: cameras[0].cloudHls,
-    //     //       local_stream_link: cameras[0].localHls,
-    //     //     })
-    //     //   }>
-    //     //   <VLCPlayer
-    //     //     source={{uri: cameras[0].cloudHls}}
-    //     //     style={[styles.videoPlayer, {height: 400, width: '100%'}]}
-    //     //     autoPlay={true}
-    //     //     muted={true}
-    //     //     mediaOptions={{
-    //     //       ':network-caching': 150,
-    //     //       ':live-caching': 0,
-    //     //       ':file-caching': 0,
-    //     //       ':network-caching': 150,
-    //     //       ':clock-jitter': 0,
-    //     //       ':clock-synchro': 0,
-    //     //     }}
-    //     //   />
-    //     // </TouchableOpacity>
-    //   );
-    // }
+   
 
     return (
-      // <View
-      //   style={[
-      //     styles.videoPlayer,
-      //     {height: 400, justifyContent: 'center', alignItems: 'center'},
-      //   ]}>
-      //   <Text style={{fontFamily: 'Poppins-Regular', color: 'gray'}}>
-      //     No cameras available
-      //   </Text>
-      // </View>
+     
       <View style={styles.cameraContainer1}>
-        <View
+       <View
           style={[
             styles.cameraContainerTop0,
-            {height: 215, justifyContent: 'center', alignItems: 'center'},
+            {height: 190, justifyContent: 'center', alignItems: 'center'},
           ]}>
+        {/* 
           <Text
             style={{
               fontFamily: 'Poppins-Medium',
@@ -380,7 +329,15 @@ function CameraScreen() {
             }}>
             Camera not availableee
           </Text>
-        </View>
+        */}
+
+         <Image
+            source={require('../../assets/imgs/stream-na.png')}
+            style={styles.cameraImage2}
+            resizeMode="cover"
+          />
+         </View>
+
       </View>
     );
   };
@@ -546,8 +503,6 @@ function CameraScreen() {
 
   const renderCameraVideo = (camera, width, height = 115) => {
     console.log('\n\n\nCamera info for renderCameraVideo:', camera?.cloudHls);
-    // update the if contion to return something if no camera or camera.cloudHls == null
-    // the text should be centered both vertically and horizontally
     if (!camera || camera.cloudHls == null)
       return (
         <View
@@ -563,7 +518,6 @@ function CameraScreen() {
             style={styles.cameraImage2}
             resizeMode="cover"
           />
-          {/* <Text>No Stream Available for this camera</Text> */}
         </View>
       );
 
@@ -606,9 +560,7 @@ function CameraScreen() {
                     console.log('WebView loaded');
                   }}
                 />
-                <View style={styles.streamLabel}>
-                  <Text style={styles.streamLabelText}>WebRTC</Text>
-                </View>
+                
               </>
             ) : (
               <>
@@ -642,239 +594,7 @@ function CameraScreen() {
     );
   };
 
-  // const renderCameraVideo = (camera, width, height = 200) => {
-  //   console.log(camera);
-  //   if (!camera) return;
-  //   const testWebRTCUrl =
-  //     'https://stream-tst-sbx.ibexvision.ai/rtc/0f300817fdd843cab50cfa01b0bfdb37/1/2ccf679a131c-21/?token=wbkg628e5blfredpu6mksp';
-  //   // HTML content for WebView to play WebRTC stream
-  //   const webrtcHTML = `
-  //   <!DOCTYPE html>
-  //   <html>
-  //   <head>
-  //     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  //     <style>
-  //       * {
-  //         margin: 0;
-  //         padding: 0;
-  //         box-sizing: border-box;
-  //       }
-  //       body {
-  //         background-color: #000;
-  //         overflow: hidden;
-  //         width: 100vw;
-  //         height: 100vh;
-  //         display: flex;
-  //         align-items: center;
-  //         justify-content: center;
-  //       }
-  //       video {
-  //         width: 100%;
-  //         height: 100%;
-  //         object-fit: contain;
-  //       }
-  //       #status {
-  //         position: absolute;
-  //         top: 10px;
-  //         left: 10px;
-  //         color: white;
-  //         background: rgba(0,0,0,0.7);
-  //         padding: 5px 10px;
-  //         border-radius: 5px;
-  //         font-size: 12px;
-  //         z-index: 100;
-  //       }
-  //     </style>
-  //   </head>
-  //   <body>
-  //     <div id="status">Connecting...</div>
-  //     <video id="video" autoplay playsinline muted></video>
-  //     <script>
-  //       const video = document.getElementById('video');
-  //       const status = document.getElementById('status');
-
-  //       async function startStream() {
-  //         try {
-  //           status.textContent = 'Initializing WebRTC...';
-
-  //           const pc = new RTCPeerConnection({
-  //             iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-  //           });
-
-  //           pc.ontrack = (event) => {
-  //             console.log('Track received:', event.track.kind);
-  //             video.srcObject = event.streams[0];
-  //             status.textContent = 'Connected';
-  //             setTimeout(() => status.style.display = 'none', 2000);
-  //           };
-
-  //           pc.oniceconnectionstatechange = () => {
-  //             console.log('ICE state:', pc.iceConnectionState);
-  //             status.textContent = 'ICE: ' + pc.iceConnectionState;
-  //           };
-
-  //           // Add transceiver for receiving video
-  //           pc.addTransceiver('video', { direction: 'recvonly' });
-  //           pc.addTransceiver('audio', { direction: 'recvonly' });
-
-  //           // Create offer
-  //           const offer = await pc.createOffer();
-  //           await pc.setLocalDescription(offer);
-
-  //           // Send offer to server
-  //           status.textContent = 'Sending offer...';
-  //           const response = await fetch('${testWebRTCUrl}', {
-  //             method: 'POST',
-  //             headers: { 'Content-Type': 'application/sdp' },
-  //             body: offer.sdp
-  //           });
-
-  //           if (!response.ok) {
-  //             throw new Error('Server error: ' + response.status);
-  //           }
-
-  //           const answerSDP = await response.text();
-  //           await pc.setRemoteDescription({
-  //             type: 'answer',
-  //             sdp: answerSDP
-  //           });
-
-  //           status.textContent = 'Stream starting...';
-
-  //         } catch (error) {
-  //           console.error('WebRTC error:', error);
-  //           status.textContent = 'Error: ' + error.message;
-  //           status.style.color = 'red';
-  //         }
-  //       }
-
-  //       startStream();
-  //     </script>
-  //   </body>
-  //   </html>
-  // `;
-  //   return (
-  //     <TouchableOpacity
-  //       style={[styles.gridCameraView, {width: width}]}
-  //       key={camera.id}
-  //       onPress={() =>
-  //         navigation.navigate('ViewCamera', {
-  //           camera_id: camera.network_id,
-  //           stream_link: camera.cloudHls,
-  //           local_stream_link: camera.localHls,
-  //         })
-  //       }>
-  //       {camera.cloudHls ? (
-  //         <View style={{height: height, width: '100%', position: 'relative'}}>
-  //           {/* WebRTC Stream using WebView */}
-  //           {useWebRTC ? (
-  //             <>
-  //               <WebView
-  //                 source={{html: webrtcHTML}}
-  //                 style={{height: height, width: '100%'}}
-  //                 mediaPlaybackRequiresUserAction={false}
-  //                 allowsInlineMediaPlayback={true}
-  //                 javaScriptEnabled={true}
-  //                 domStorageEnabled={true}
-  //                 startInLoadingState={true}
-  //                 scalesPageToFit={true}
-  //                 mixedContentMode="always"
-  //                 originWhitelist={['*']}
-  //                 onError={syntheticEvent => {
-  //                   const {nativeEvent} = syntheticEvent;
-  //                   console.warn('WebView error: ', nativeEvent);
-  //                 }}
-  //                 onMessage={event => {
-  //                   console.log('WebView message:', event.nativeEvent.data);
-  //                 }}
-  //               />
-  //               <View style={styles.streamLabel}>
-  //                 <Text style={styles.streamLabelText}>WebRTCcc</Text>
-  //               </View>
-  //             </>
-  //           ) : (
-  //             /* VLC Player Stream */
-  //             <>
-  //               {/* <VLCPlayer
-  //                 source={{uri: camera.cloudHls}}
-  //                 style={[styles.videoPlayer, {height: height}]}
-  //                 autoPlay={true}
-  //                 muted={true}
-  //                 mediaOptions={{
-  //                   ':network-caching': 0,
-  //                   ':live-caching': 0,
-  //                   ':file-caching': 0,
-  //                   ':clock-jitter': 0,
-  //                   ':clock-synchro': 0,
-  //                 }}
-  //               /> */}
-  //               <View style={styles.streamLabel}>
-  //                 <Text style={styles.streamLabelText}>HLS</Text>
-  //               </View>
-  //             </>
-  //           )}
-  //         </View>
-  //       ) : (
-  //         <Image
-  //           source={require('../../assets/imgs/stream-na.png')}
-  //           style={styles.cameraImage}
-  //           resizeMode="contain"
-  //         />
-  //       )}
-  //     </TouchableOpacity>
-
-  //     // <TouchableOpacity
-  //     //   style={[styles.gridCameraView, {width: width}]}
-  //     //   key={camera.id}
-  //     //   onPress={() =>
-  //     //     navigation.navigate('ViewCamera', {
-  //     //       camera_id: camera.network_id,
-  //     //       stream_link: camera.cloudHls,
-  //     //       local_stream_link: camera.localHls,
-  //     //     })
-  //     //   }>
-  //     //   {camera.cloudHls ? (
-  //     //     <VLCPlayer
-  //     //       source={{uri: camera.cloudHls}}
-  //     //       style={[styles.videoPlayer, {height: height}]}
-  //     //       autoPlay={true}
-  //     //       muted={true}
-  //     //       mediaOptions={{
-  //     //         ':network-caching': 0,
-  //     //         ':live-caching': 0,
-  //     //         ':file-caching': 0,
-  //     //         ':live-caching': 0,
-  //     //         ':network-caching': 0,
-  //     //         ':clock-jitter': 0,
-  //     //         ':clock-synchro': 0,
-  //     //       }}
-  //     //     />
-  //     //   ) : (
-  //     //     <Image
-  //     //       source={require('../../assets/imgs/stream-na.png')}
-  //     //       style={styles.cameraImage}
-  //     //       resizeMode="contain"
-  //     //     />
-  //     //   )}
-  //     // </TouchableOpacity>
-  //   );
-  // };
-
-  // Add toggle switch to your UI (add this where you want the toggle to appear)
-  const renderStreamToggle = () => {
-    return (
-      <View style={styles.toggleContainer}>
-        <Text style={styles.toggleLabel}>HLS</Text>
-        <Switch
-          value={useWebRTC}
-          onValueChange={setUseWebRTC}
-          trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={useWebRTC ? '#2196F3' : '#f4f3f4'}
-        />
-        <Text style={styles.toggleLabel}>WebRTC</Text>
-      </View>
-    );
-  };
+ 
 
   const cancelDelete = () => {
     setDeleteModalVisible(false);
@@ -942,7 +662,6 @@ function CameraScreen() {
   const renderCameraItem = ({item}) => {
     const hasHls = item.cloudHls;
     const isMenuOpen = menuVisible === item.id;
-
     
     
     
@@ -954,11 +673,11 @@ function CameraScreen() {
         setMenuVisible(null);
      
     };
-        let rtcUrl = hasHls
-        ?.replace('port/8888', 'rtc')
-        .replace('/index.m3u8', '/');
-      console.log('\n\n\n\n  *****  %%%  ***** \n\n item:', item);
-      console.log('\n\n\n rtcUrl:', rtcUrl, '\n\n');
+        // let rtcUrl = hasHls;
+         let rtcUrl = hasHls?.replace('port/8888', 'rtc')
+      .replace('/index.m3u8', '/');
+      // console.log('\n\n\n\n  *****  %%%  ***** \n\n item:', item);
+      console.log('\n\n\n rtcUrl >>>>>>>>>>>>>>>>>:', rtcUrl, '\n\n');
 
     const handleDelete = () => {
       setCameraToDelete(item);
@@ -1062,22 +781,26 @@ function CameraScreen() {
             <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
 
             <View style={styles.menuContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.menuItem,
-                  {opacity: userRole === 0 || userRole === 4 ? 1 : 0.4},
-                ]}
-                onPress={streamingStart}
-                disabled={userRole === 0 || userRole === 4 ? false : true}>
-                <Image
-                  source={require('../../assets/imgs/icons/signal-stream.png')}
-                  style={styles.optionsIcons}
-                />
-                <Text style={{fontFamily: 'Poppins-Regular', fontSize: 11}}>
-                  Start Stream
-                </Text>
-              </TouchableOpacity>
+               { !item.cloudHls &&   (
+                 <TouchableOpacity
+                   style={[
+                     styles.menuItem,
+                     {opacity: userRole === 0 || userRole === 4 ? 1 : 0.4},
+                   ]}
+                   onPress={streamingStart}
+                   disabled={userRole === 0 || userRole === 4 ? false : true}>
+                   <Image
+                     source={require('../../assets/imgs/icons/signal-stream.png')}
+                     style={styles.optionsIcons}
+                   />
+                   <Text style={{fontFamily: 'Poppins-Regular', fontSize: 11}}>
+                     Start Stream
+                   </Text>
+                 </TouchableOpacity>
+               )}
 
+              { item.cloudHls &&   (
+                
               <TouchableOpacity
                 style={[
                   styles.menuItem,
@@ -1093,6 +816,7 @@ function CameraScreen() {
                   Stop Stream
                 </Text>
               </TouchableOpacity>
+              )}
 
               <TouchableOpacity style={styles.menuItem} onPress={handleView}>
                 <Image
@@ -1149,22 +873,7 @@ function CameraScreen() {
         </View>
         {hasHls ? (
           <View>
-            {/* <VLCPlayer
-              source={{uri: item.cloudHls}}
-              style={styles.videoPlayer}
-              autoPlay={true}
-              muted={true}
-              mediaOptions={{
-                ':network-caching': 150,
-                ':live-caching': 0,
-                ':file-caching': 0,
-                ':live-caching': 0,
-                ':network-caching': 150,
-                ':clock-jitter': 0,
-                ':clock-synchro': 0,
-              }}
-            /> */}
-
+           
              <WebrtcWebView
                   rtcUrl={rtcUrl}
                   height={186}
@@ -1184,7 +893,21 @@ function CameraScreen() {
                     console.log('WebView loaded');
                   }}
                 />
-
+{/* <Video
+      source={{ uri: rtcUrl }}     // rtcUrl must be an HLS (.m3u8) URL
+      style={{ width: '100%', height: 186 }}
+      resizeMode="cover"
+      controls={true}
+      onError={(err) => {
+        console.log("Video Error:", err);
+      }}
+      onLoad={() => {
+        console.log("Video Loaded");
+      }}
+      onBuffer={(e) => {
+        console.log("Buffering: ", e);
+      }}
+    /> */}
 
           </View>
         ) : (
@@ -1204,10 +927,10 @@ function CameraScreen() {
     return (
       <View style={styles.container}>
         <StatusBar
-          barStyle="dark-content" // or "light-content" depending on background
-          backgroundColor="#fff" // match your loader bg color
-          translucent={false} // ensures it’s visible
-          hidden={false} // 👈 explicitly show it
+          barStyle="dark-content" 
+          backgroundColor="#fff"
+          translucent={false}
+          hidden={false} 
         />
         <AnimatedLottieView
           ref={animation}
@@ -1221,14 +944,12 @@ function CameraScreen() {
   }
 
   const screenWidth = Dimensions.get('window').width;
-  const itemWidth = (screenWidth - 60) / 2; // Adjust spacing between items
-
+  const itemWidth = (screenWidth - 60) / 2; 
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => handleGridSelection(item.id)}
       style={{
         width: itemWidth,
-        // backgroundColor: '#fff',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#ccc',
@@ -1244,7 +965,6 @@ function CameraScreen() {
         source={item.icon}
         style={{width: 27, height: 27, marginRight: 8}}
       />
-      {/* if item.label is "1 Camera" then add some marginLeft to the Text */}
       <Text
         style={{
           fontFamily: 'Poppins-Regular',
@@ -1270,8 +990,9 @@ function CameraScreen() {
             showThirdBtn={userRole === 0 ? true : false}
             ThirdBtnNavigation={'AddCamera'}
           />
-          {screen === 'grid' ? (
-            <ScrollView style={{flexGrow: 1}}>
+         
+            <ScrollView 
+            style={{flexGrow: 1, display: screen === 'grid' ? 'flex' : 'none' }}>
               <View
                 style={{
                   display: 'flex',
@@ -1279,7 +1000,6 @@ function CameraScreen() {
                   flex: 1,
                   paddingBottom: 80,
                 }}>
-                {renderStreamToggle()}
                 {renderGridLayout()}
 
                 <View
@@ -1313,7 +1033,7 @@ function CameraScreen() {
                       scrollEnabled={false}
                       renderItem={renderItem}
                       keyExtractor={item => item.id.toString()}
-                      numColumns={2} // 👈 ensures always 2 items per row
+                      numColumns={2} 
                       contentContainerStyle={{
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1322,218 +1042,40 @@ function CameraScreen() {
                     />
                   </View>
 
-                  {/* <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      borderWidth: 1,
-                      borderColor: 'gray',
-                      borderRadius: 10,
-                      marginVertical: 5,
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                    }}>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(1)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/one-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          1 Camera
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(2)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/two-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          2 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(3)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/three-grids.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          3 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(4)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/four-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          4 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(6)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/six-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          6 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(8)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/eight-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          8 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(9)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/nine-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          9 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => handleGridSelection(12)}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../assets/imgs/icons/twelve-grid.png')}
-                          style={{width: 27, height: 27, marginHorizontal: 14}}
-                        />
-                        <Text style={{fontFamily: 'Poppins-Regular'}}>
-                          12 Cameras
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View> */}
+                 
                 </View>
               </View>
             </ScrollView>
-          ) : (
+         
             <FlatList
               data={cameras}
               renderItem={renderCameraItem}
               keyExtractor={item => item.id.toString()}
               numColumns={1}
-              style={styles.scrollViewContent}
+              style={[
+    styles.scrollViewContent,
+    {display: screen === 'list' ? 'flex' : 'none'}
+  ]}
               showsVerticalScrollIndicator={false}
             />
-          )}
+          
         </View>
-
+        
+        {/* this TouchableOpacity change the screen as 'grid' or 'list' */}
+        <View style={styles.fixedButtonLayoutContainer}>
+              <TouchableOpacity
+                style={styles.fixedButton}
+                onPress={() => changeScreen(screen, setScreen)}>
+                <Image
+                  source={
+                    screen === 'grid'
+                      ? require('../../assets/imgs/icons/dropdown-bar.png')
+                      : require('../../assets/imgs/icons/objects-column.png')
+                  }
+                  style={styles.fixedButtonImage}
+                />
+              </TouchableOpacity>
+            </View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -1541,7 +1083,6 @@ function CameraScreen() {
           onRequestClose={() => setCameraSelectionModalVisible(false)}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              {/* <ScrollView style={{flexGrow:1, width:'100%'}}> */}
               <Text style={styles.modalText}>
                 Select {selectedGrid} Cameras
               </Text>
@@ -1581,7 +1122,6 @@ function CameraScreen() {
                 onPress={submitCameraSelection}>
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
-              {/* </ScrollView> */}
             </View>
           </View>
         </Modal>
@@ -1635,7 +1175,7 @@ function CameraScreen() {
             </View>
           </View>
         </Modal>
-        <LayoutToggleBtn screen={screen} setScreen={setScreen} />
+        
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -1645,6 +1185,32 @@ const styles = StyleSheet.create({
   gridCameraView: {
     width: '50%',
   },
+
+
+
+ fixedButtonLayoutContainer: {
+    position: 'absolute',
+    bottom: screenWidth < 800 ? 90 : 100,
+    right: 22,
+  },
+    fixedButtonImage: {
+    width: 21,
+    height: 21,
+  },
+   fixedButton: {
+      backgroundColor: '#1B3C55',
+      paddingVertical: screenWidth < 800 ? 10 : 15,
+      paddingHorizontal: screenWidth < 800 ? 3 : 7,
+      borderRadius: 12,
+      alignItems: 'right',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: screenWidth < 800 ? 75 : 100,
+    },
+
+
+
 
   gridCameraView: {
     margin: 2,
@@ -1720,10 +1286,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     height: '100%',
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#010b13ff',
-    borderRadius: 10,
+    marginBottom: 20,
+    // borderWidth: 1,
+    // borderColor: '#010b13ff',
+    // borderRadius: 10,
   },
   cameraContainerTop: {
     flexDirection: 'row',

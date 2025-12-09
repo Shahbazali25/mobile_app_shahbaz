@@ -27,7 +27,7 @@ export default function Notifications() {
   const [currentImageUrl, setCurrentImageUrl] = useState('');
 
   const openImageViewer = url => {
-    console.log(url);
+    console.log('\n\n\n url :: ', url);
     setCurrentImageUrl(url);
     setImageViewerVisible(true);
   };
@@ -38,9 +38,9 @@ export default function Notifications() {
     const fetchNotifications = async () => {
       try {
         const role = await checkUserRole();
-        console.log(role);
+        console.log('\n\n\n role :: ', role);
         const response = await getCameraNotifications();
-        console.log('Notifications:', response);
+        console.log('\n\n\n Notifications all unfiltered:', response);
         if (role === 2 || role === 1) {
           const sensorNotificationTypes = [
             'sensor_created',
@@ -52,7 +52,7 @@ export default function Notifications() {
               sensorNotificationTypes.includes(notification.type),
             ),
           };
-          console.log(filteredSensorNotifications);
+          console.log('\n\n\n filteredSensorNotifications :::', filteredSensorNotifications);
           const count = filteredSensorNotifications.data.length;
           await AsyncStorage.setItem('notificationCount', count.toString());
           setNotifications(filteredSensorNotifications);
@@ -74,7 +74,7 @@ export default function Notifications() {
               cameraNotificationTypes.includes(notification.type),
             ),
           };
-          console.log(filteredCameraNotifications);
+          console.log('\n\n\n filteredCameraNotifications :::',  filteredCameraNotifications);
           const count = filteredCameraNotifications.data.length;
           await AsyncStorage.setItem('notificationCount', count.toString());
           setNotifications(filteredCameraNotifications);
@@ -247,8 +247,8 @@ export default function Notifications() {
         <NavBar
           Content="Notifications"
           BackAction="Home"
-          showThirdBtn={true}
-          textStyle={{color: '#fff'}} // 👈 make heading text white
+          showThirdBtn={false}
+          textStyle={{color: '#1E293B'}} // 👈 make heading text white
         />
       </View>
       <ScrollView style={styles.form}>
@@ -292,6 +292,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     backgroundColor: 'white',
     flexGrow: 1,
+  },
+  headerContainer: {
+   
+    backgroundColor: 'white',
   },
   animationContainer: {
     flex: 1,

@@ -139,12 +139,12 @@ export default function VerifyResetCode() {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
       <ImageBackground
-        source={require('../../../assets/imgs/onboarding-bg.png')}
+        source={require('../../../assets/imgs/onboarding-bg2.png')}
         style={[styles.container, {width: '100%'}]}
         resizeMode="cover">
         <View
           style={{
-            flex: 0.45,
+            flex: 0.55,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-end',
@@ -154,8 +154,8 @@ export default function VerifyResetCode() {
             accessibilityRole="button"
             style={{
               position: 'absolute',
-              top: 56,
-              left: 12,
+              top: 36,
+              left: 0,
               zIndex: 10,
               flexDirection: 'row',
               alignItems: 'center',
@@ -170,7 +170,7 @@ export default function VerifyResetCode() {
             <Text
               style={{
                 color: 'white',
-                marginLeft: 8,
+                marginLeft: 2,
                 fontFamily: 'Poppins-Regular',
                 fontSize: 16,
               }}>
@@ -268,9 +268,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   heading: {
-    fontSize: 40,
+    fontSize: 25,
     color: '#fff',
-    marginBottom: 10,
+    marginBottom: 0,
     fontFamily: 'Poppins-Bold',
   },
   headingText: {

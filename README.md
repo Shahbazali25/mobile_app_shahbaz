@@ -95,3 +95,17 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+
+
+For Notifications (system notifications)
+
+✅ 5. Ensure Notifee is linked properly
+Android: No extra work — autolinking is done.
+iOS: You must run Pod install — but you're on Windows, so iOS won't build anyway.
+
+If you later build iOS on Mac, run:
+cd ios
+pod install
+
+

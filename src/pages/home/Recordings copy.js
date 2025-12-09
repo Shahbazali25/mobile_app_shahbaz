@@ -21,6 +21,7 @@ import Video from 'react-native-video';
 import {loadData} from '../../components/auth/loadData';
 import {baseURL, deviceId} from '../../components/utils/baseUrl';
 
+
 export default function Recordings() {
   const animation = useRef(null);
   const [isLoading, setLoading] = useState(true);
@@ -48,7 +49,7 @@ export default function Recordings() {
       time: timePart.trim(),
     };
   };
-  const auth = loadData();
+    const auth = loadData();
 
   useEffect(() => {
     animation.current?.play();
@@ -104,7 +105,7 @@ export default function Recordings() {
         {label: 'All Times', value: 'all'},
         ...uniqueTimes.map(time => ({label: time, value: time})),
       ]);
-      console.log('updating recordings on line 102 ::', allRecordings);
+// console.log( 'updating recordings on line 102 ::', allRecordings);
       setFilteredRecordings(allRecordings);
     }
   }, [allRecordings]);
@@ -147,7 +148,7 @@ export default function Recordings() {
         return recTime <= selectedEndTime;
       });
     }
-    console.log('updating recordings on line 145 ::', allRecordings);
+// console.log( 'updating recordings on line 145 ::', allRecordings);
 
     setFilteredRecordings(filtered);
   }, [
@@ -261,7 +262,7 @@ export default function Recordings() {
     const fetchAndProcessRecordings = async () => {
       try {
         const response = await getAllRecordings();
-        console.log('Recordings Data:', response);
+        // console.log('Recordings Data:', response);
         setAllRecordings(response);
       } catch (error) {
         Toast.show({
@@ -292,7 +293,7 @@ export default function Recordings() {
         {label: 'All Zones', value: 'all'},
         ...uniqueZones.map(zone => ({label: zone, value: zone})),
       ]);
-      console.log('updating recordings on line 290 ::', allRecordings);
+      // console.log( 'updating recordings on line 290 ::', allRecordings);
 
       setFilteredRecordings(allRecordings);
     }
@@ -308,7 +309,7 @@ export default function Recordings() {
     if (selectedZone !== 'all') {
       filtered = filtered.filter(rec => rec.zoneName === selectedZone);
     }
-    console.log('updating recordings on line 306 ::', filtered);
+    // console.log( 'updating recordings on line 306 ::', filtered);
 
     setFilteredRecordings(filtered);
   }, [selectedCamera, selectedZone, allRecordings]);
@@ -333,6 +334,8 @@ export default function Recordings() {
     );
   }
 
+
+
   const renderRecordingItem = (item, index) => {
     return (
       <TouchableOpacity
@@ -344,7 +347,7 @@ export default function Recordings() {
             name: item.name,
           })
         }>
-        {/* <Video
+          {/* <Video
   source={{
     uri: "https://can-log-input-bucket-css.s3.us-east-1.amazonaws.com/recordings/1/c26ea016-d6ea-4df2-a313-85e273811750-2ccf679a131c-77%7C2025-11-24_20-36-09-710394.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAYZZGS3RC33WXY7W5%2F20251124%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251124T153734Z&X-Amz-Expires=3600&X-Amz-Signature=1013a8c439b8529ee0ebc98ef9dd880408b0eae43f0f6b9b0db69d8102240aee&X-Amz-SignedHeaders=host&x-id=GetObject"
   }}
@@ -362,13 +365,15 @@ export default function Recordings() {
           <Text style={styles.notificationTime}>Camera: {item.cameraName}</Text>
           <Text style={styles.notificationTime}>Zone: {item.zoneName}</Text>
         </View>
+
+
       </TouchableOpacity>
     );
   };
 
   const onPress = () => {
     const zoneOption = ['Cancel', ...zoneOptions.map(zone => zone.label)];
-    console.log(zoneOption);
+    // console.log(zoneOption);
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: zoneOption,
@@ -379,7 +384,7 @@ export default function Recordings() {
         if (buttonIndex === 0) {
           return;
         } else {
-          console.log(zoneOptions[buttonIndex - 1]);
+          // console.log(zoneOptions[buttonIndex - 1]);
           const selectedZone = zoneOptions[buttonIndex - 1];
           setSelectedZone(selectedZone.value);
         }
@@ -399,7 +404,7 @@ export default function Recordings() {
         if (buttonIndex === 0) {
           return;
         } else {
-          console.log(cameraOptions[buttonIndex - 1]);
+          // console.log(cameraOptions[buttonIndex - 1]);
           const selectedCamera = cameraOptions[buttonIndex - 1];
           setSelectedCamera(selectedCamera.value);
         }
@@ -415,7 +420,7 @@ export default function Recordings() {
           Content="Recordings"
           BackAction="Home"
           showThirdBtn={false}
-          textStyle={{color: '#000000ff'}}
+          textStyle={{color: '#fff'}}
         />
       </View>
       {/* 🔹 White main content */}
@@ -423,16 +428,6 @@ export default function Recordings() {
         <Text style={{fontFamily: 'Poppins-SemiBold', fontSize: 16}}>
           Filters
         </Text>
-        <View 
-         style={{
-            paddingHorizontal: 10,
-            paddingBottom:10,
-            borderWidth: 1,
-            borderColor: '#dbd3d3ff',
-            borderRadius: 8,
-          }}
-          >
-
         <View
           style={{
             display: 'flex',
@@ -440,7 +435,6 @@ export default function Recordings() {
             alignItems: 'center',
             width: '100%',
             justifyContent: 'space-between',
-            
           }}>
           {Platform.select({
             ios: (
@@ -819,7 +813,6 @@ export default function Recordings() {
             ),
           })}
         </View>
-        </View>
       </View>
       <ScrollView style={styles.form}>
         <View style={styles.container}>
@@ -866,7 +859,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E293B', // dark only for top
   },
   headerContainer: {
-    backgroundColor: '#ffffffff', // dark header area (NavBar section)
+    backgroundColor: '#1E293B', // dark header area (NavBar section)
   },
   contentContainer: {
     flex: 1,
@@ -876,20 +869,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
 
-    // marginTop: 6,
-    // marginBottom: 15,
-    // borderRadius: 30,
+    marginTop: 6,
+    marginBottom: 15,
+    borderRadius: 30,
     minHeight: 300,
-    height: 300,
+    height:300
   },
 
   form: {
     display: 'flex',
     flexDirection: 'column',
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     backgroundColor: 'white',
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     flexGrow: 1,
     // backgroundColor: 'transparent',
   },
@@ -907,7 +900,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     width: '100%',
     marginBottom: 80,
-    minHeight: '60%',
+    minHeight:'60%'
   },
   title: {
     fontWeight: '600',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import NavBar from '../../layouts/navigations/navbar';
 import {useRoute} from '@react-navigation/native';
@@ -11,13 +11,16 @@ function UpdateZone() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent={true} />
-      <NavBar
-        Content="Update Zone"
-        BackAction="ZonesConfiguration"
-        showThirdBtn={false}
-        textStyle={{color: '#fff'}} // 👈 White text for this screen only
-      />
-      <UpdateZoneForm zoneId={zoneId} />
+      <View style={styles.headerContainer}>
+
+        <NavBar
+          Content="Update Zone"
+          BackAction="ZonesConfiguration"
+          showThirdBtn={false}
+          // textStyle={{color: '#fff'}} // 👈 White text for this screen only
+        />
+        <UpdateZoneForm zoneId={zoneId} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -27,6 +30,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#1E293B',
+  },
+   headerContainer: {
+    backgroundColor: 'white',
+    height: '100%',
   },
 });
 

@@ -1,5 +1,12 @@
 import {React, useState, useRef} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import PrimaryBtn from '../buttons/primaryBtn';
@@ -186,7 +193,7 @@ export default function AddCameraForm() {
           style={[styles.sectionLabel, {marginTop: 12}]}>
           Stream Configuration
         </Text>
-        <View style={[styles.inputFields, {marginBottom:12}]}>
+        <View style={[styles.inputFields, {marginBottom: 12}]}>
           <Text
             aria-label="Label for Username"
             nativeID="labelUsername"
@@ -250,7 +257,7 @@ const styles = StyleSheet.create({
   formInputText: {
     borderWidth: 1,
     borderColor: 'lightgray',
-    color:'black',
+    color: 'black',
     borderRadius: 9,
     marginTop: 6,
     fontFamily: 'Poppins-Regular',
@@ -261,10 +268,9 @@ const styles = StyleSheet.create({
           includeFontPadding: false,
         }
       : {}),
-       padding:Platform.select({ios:10, android:10})
+    padding: Platform.select({ios: 10, android: 10}),
   },
   inputFields: {
     marginVertical: 6,
-    
   },
 });

@@ -15,7 +15,7 @@ function KnoxSolarData() {
   const animationBatteryLine = useRef(null);
   const animationSolarLine = useRef(null);
   const solarData = useWebSocketData('knox');
-  console.log(solarData);
+  console.log("\n\n\n   ---> KnoxSolarData  >>> solarData ::: ",solarData);
 
   const statuses = useMemo(() => {
     if (!solarData)

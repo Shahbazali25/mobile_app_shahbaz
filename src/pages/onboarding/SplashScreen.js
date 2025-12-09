@@ -7,7 +7,7 @@ export default function SplashScreen({navigation}) {
   };
   return (
     <ImageBackground
-      source={require('../../assets/imgs/onboarding-bg.png')}
+      source={require('../../assets/imgs/onboarding-bg2.png')}
       style={[styles.container, {width: '100%'}]}
       resizeMode="cover">
       <View style={styles.content}>

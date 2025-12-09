@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import NavBar from '../../layouts/navigations/navbar';
 import AssignZone from '../../layouts/forms/assignZone';
@@ -14,12 +14,14 @@ function AssignSensorZone() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent={true} />
-      <NavBar
-        Content="Assign Zone"
-        BackAction="SensorSetup"
-        showThirdBtn={false}
-      />
-      <AssignZone sensorId={sensorId} />
+      <View style={styles.headerContainer}>
+        <NavBar
+          Content="Assignsss Zone"
+          BackAction="SensorSetup"
+          showThirdBtn={false}
+        />
+        <AssignZone sensorId={sensorId} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -29,6 +31,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#1E293B',
+  },
+  headerContainer: {
+    backgroundColor: 'white',
+    height: '100%',
   },
 });
 

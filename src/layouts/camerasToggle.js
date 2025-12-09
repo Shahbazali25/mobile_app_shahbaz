@@ -10,6 +10,8 @@ import {
   Button,
   Platform,
   StatusBar,
+  NativeModules,
+  PermissionsAndroid,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
@@ -36,8 +38,8 @@ import {screenWidth} from '../components/utils/constants';
 import {checkUserRole} from '../components/utils/checkRole';
 import NetInfo from '@react-native-community/netinfo';
 import WebrtcWebView from '../components/WebrtcWebView';
-import CustomZonePicker from './CustomZonePicker'; // Adjust path as needed
-import CustomCameraStatusPicker from './CustomCameraStatusPicker'; // Adjust path as needed
+import CustomZonePicker from './CustomZonePicker';
+import CustomCameraStatusPicker from './CustomCameraStatusPicker';
 
 function Cameras({userData}) {
   const animation = useRef(null);
@@ -79,7 +81,7 @@ function Cameras({userData}) {
             }
           })
           .catch(err => {
-            console.log(String(err));
+            // console.log(String(err));
           });
       })
       .catch(err => {
@@ -202,7 +204,7 @@ function Cameras({userData}) {
         }
       } else if (role === 1 || role === 2 || role === 5) {
         const response = await getAllSensors();
-        console.log(response);
+        // console.log(response);
         if (response) {
           if (active && allModes.length > 0) {
             const currentActiveMode = allModes.find(mode => mode.id === active);
@@ -223,7 +225,6 @@ function Cameras({userData}) {
         }
       } else {
         const response = await getAllSensors();
-        console.log(response);
         if (response) {
           if (active && allModes.length > 0) {
             const currentActiveMode = allModes.find(mode => mode.id === active);
@@ -269,9 +270,7 @@ function Cameras({userData}) {
       try {
         const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
         setSensorValues(parsedData.messages);
-      } catch (error) {
-        console.error('Error parsing alert data:', error);
-      }
+      } catch (error) {}
     });
   };
 
@@ -281,7 +280,6 @@ function Cameras({userData}) {
       if (response && Array.isArray(response)) {
         setZones([{id: 'all', name: 'All Zones'}, ...response]);
       } else {
-        console.error('Invalid zones response:', response);
         setZones([{id: 'all', name: 'All Zones'}]);
       }
     } catch (error) {
@@ -295,15 +293,11 @@ function Cameras({userData}) {
     try {
       const countString = await AsyncStorage.getItem('notificationCount');
       if (countString !== null) {
-        // console.log('COUNT', countString);
         const count = parseInt(countString, 10);
-        // console.log('COUNT-INT', count);
         setNotificationCount(count);
       } else {
       }
-    } catch (error) {
-      console.error('Error retrieving notification count:', error);
-    }
+    } catch (error) {}
   };
 
   const camerasOfSpecificZone = async zoneId => {
@@ -311,6 +305,10 @@ function Cameras({userData}) {
       const response = await getCameraByZone(zoneId);
       if (activeMode && modes.length > 0) {
         const currentActiveMode = modes.find(mode => mode.id === activeMode);
+        console.log(
+          ' ######************** currentActiveMode ::  ',
+          currentActiveMode,
+        );
         if (currentActiveMode) {
           filterCamerasByActiveMode(response, currentActiveMode.linkedCameras);
         } else {
@@ -320,7 +318,6 @@ function Cameras({userData}) {
         setCameras(response);
       }
     } catch (error) {
-      console.error('Error fetching cameras by zone:', error);
       errorMessage(
         'Zone Cameras Error',
         'Failed to fetch cameras for the selected zone.',
@@ -334,6 +331,10 @@ function Cameras({userData}) {
       const response = await getSensorByZone(zoneId);
       if (activeMode && modes.length > 0) {
         const currentActiveMode = modes.find(mode => mode.id === activeMode);
+        console.log(
+          ' ######******sn**** currentActiveMode ::  ',
+          currentActiveMode,
+        );
         if (currentActiveMode) {
           filterSensorsByActiveMode(response, currentActiveMode.linkedSensors);
         } else {
@@ -343,7 +344,6 @@ function Cameras({userData}) {
         setSensors(response);
       }
     } catch (error) {
-      console.error('Error fetching sensors by zone:', error);
       errorMessage(
         'Zone Sensors Error',
         'Failed to fetch sensors for the selected zone.',
@@ -364,7 +364,6 @@ function Cameras({userData}) {
       if (zoneIcons[foundZone.type]) {
         return zoneIcons[foundZone.type];
       } else {
-        console.warn(`Image not found for zone type: ${foundZone.type}`);
         return zoneIcons['all'];
       }
     } else {
@@ -393,9 +392,12 @@ function Cameras({userData}) {
 
   const renderCameraItem = ({item}) => {
     const hasHls = isConnected ? item.cloudHls : item.localHls;
+    console.log('\n\n\n\n ############\n\n renderCameraItem item:', item);
 
     const truncatedName = shortenName(20, item.name, 'Unnamed Camera');
-
+    let rtcUrl =
+      isConnected &&
+      hasHls?.replace('port/8888', 'rtc').replace('/index.m3u8', '/');
     return (
       <View style={styles.cameraContainer}>
         {hasHls ? (
@@ -407,19 +409,23 @@ function Cameras({userData}) {
                 local_stream_link: item.localHls,
               })
             }>
-            <VLCPlayer
-              source={{uri: isConnected ? item.cloudHls : item.localHls}}
-              style={styles.videoPlayer}
-              autoPlay={true}
-              muted={true}
-              mediaOptions={{
-                ':network-caching': 150,
-                ':live-caching': 0,
-                ':file-caching': 0,
-                ':live-caching': 0,
-                ':network-caching': 150,
-                ':clock-jitter': 0,
-                ':clock-synchro': 0,
+            <WebrtcWebView
+              rtcUrl={rtcUrl}
+              height={205}
+              onError={syntheticEvent => {
+                const {nativeEvent} = syntheticEvent;
+                console.error('WebView error: ', nativeEvent);
+              }}
+              onMessage={event => {
+                try {
+                  const data = JSON.parse(event.nativeEvent.data);
+                  // console.log(`[WebRTC ${data.type}]:`, data.message);
+                } catch (e) {
+                  // console.log('WebView message:', event.nativeEvent.data);
+                }
+              }}
+              onLoadEnd={() => {
+                // console.log('WebView loaded');
               }}
             />
           </TouchableOpacity>
@@ -463,6 +469,7 @@ function Cameras({userData}) {
   };
 
   const handleZoneChange = zoneId => {
+    // console.log('Zone id :: ', zoneId);
     setSelectedOption(zoneId);
     if (zoneId === 'all') {
       fetchInitialData();
@@ -523,7 +530,7 @@ function Cameras({userData}) {
       const alertMessage =
         sensorValues &&
         sensorValues.find(value => value.topic === sensor.mqttTopic);
-      // console.log(sensorValues)
+      // console.log('\n\n\n\n this is the *** ',sensorValues)
       const iconSource =
         sensorIcons[sensor.type] || require('../assets/imgs/icons/faucet.png');
       let valueText = 'N/A';
@@ -554,11 +561,11 @@ function Cameras({userData}) {
           key={sensor.id}
           style={{
             marginVertical: 4,
-            maxWidth: 100,
-            width: 100,
+            maxWidth: 130,
+            width: 130,
             minHeight: 100,
             paddingVertical: 10,
-            paddingHorizontal: 10,
+            paddingHorizontal: 5,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -666,15 +673,11 @@ function Cameras({userData}) {
   const renderSingleCamera = camera => {
     const truncatedName = shortenName(20, camera.name, 'Unnamed Camera');
     console.log('\n\n\n\n ############\n\nRendering single camera:', camera);
-    // i want to modify the 'hasHls' value if 'camera.cloudHls' exists and if not
-
     const hasHls = isConnected ? camera.cloudHls : camera.localHls;
-
     let rtcUrl =
       isConnected &&
       hasHls?.replace('port/8888', 'rtc').replace('/index.m3u8', '/');
-    console.log('RTC URL:', rtcUrl);
-
+    // console.log('RTC *****************************URL:', rtcUrl);
     return (
       <View style={styles.cameraContainer}>
         {hasHls ? (
@@ -687,45 +690,25 @@ function Cameras({userData}) {
               })
             }>
             {/* if isConnected then show WebrtcWebView otherwise show VLCPlayer */}
-            {isConnected ? (
-              <WebrtcWebView
-                rtcUrl={rtcUrl}
-                height={205}
-                onError={syntheticEvent => {
-                  const {nativeEvent} = syntheticEvent;
-                  console.error('WebView error: ', nativeEvent);
-                }}
-                onMessage={event => {
-                  try {
-                    const data = JSON.parse(event.nativeEvent.data);
-                    console.log(`[WebRTC ${data.type}]:`, data.message);
-                  } catch (e) {
-                    console.log('WebView message:', event.nativeEvent.data);
-                  }
-                }}
-                onLoadEnd={() => {
-                  console.log('WebView loaded');
-                }}
-              />
-            ) : (
-              <VLCPlayer
-                source={{
-                  uri: isConnected ? camera.cloudHls : camera.localHls,
-                }}
-                style={styles.videoPlayer}
-                autoPlay={true}
-                muted={true}
-                mediaOptions={{
-                  ':network-caching': 150,
-                  ':live-caching': 0,
-                  ':file-caching': 0,
-                  ':live-caching': 0,
-                  ':network-caching': 150,
-                  ':clock-jitter': 0,
-                  ':clock-synchro': 0,
-                }}
-              />
-            )}
+            <WebrtcWebView
+              rtcUrl={rtcUrl}
+              height={205}
+              onError={syntheticEvent => {
+                const {nativeEvent} = syntheticEvent;
+                console.error('WebView error: ', nativeEvent);
+              }}
+              onMessage={event => {
+                try {
+                  const data = JSON.parse(event.nativeEvent.data);
+                  // console.log(`[WebRTC ${data.type}]:`, data.message);
+                } catch (e) {
+                  // console.log('WebView message:', event.nativeEvent.data);
+                }
+              }}
+              onLoadEnd={() => {
+                // console.log('WebView loaded');
+              }}
+            />
           </TouchableOpacity>
         ) : (
           <Image
@@ -854,7 +837,7 @@ function Cameras({userData}) {
               ),
             </Text>
             <Text style={{fontSize: 12, fontFamily: 'Poppins-Regular'}}>
-              Welcome to ibexeYe360°™
+              Welcome to ibeXeYe360°™
             </Text>
           </View>
         </View>
@@ -1277,6 +1260,7 @@ function Cameras({userData}) {
                 itemWidth={300}
                 loop={true}
                 autoplay={true}
+                removeClippedSubviews={false} // CRITICAL: Prevents unmounting
               />
             )}
           </View>
@@ -1335,7 +1319,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cameraContainer: {
-    width: '99%',
+    width: '98%',
     backgroundColor: 'white',
     borderRadius: 10,
     marginVertical: 12,

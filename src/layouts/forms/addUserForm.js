@@ -29,6 +29,7 @@ export default function AddUserForm() {
   const [email, setEmail] = useState();
   const [selectedOption, setSelectedOption] = useState(0);
   const [roles, setRoles] = useState();
+  const [role_id, setRole_id] = useState();
 
   useEffect(() => {
     const getRoles = async () => {
@@ -45,19 +46,60 @@ export default function AddUserForm() {
     getRoles();
   }, []);
 
+  useEffect(() => {
+    console.log('Selected role_id:', role_id);
+  }, [role_id]);
+
   const userCreate = async () => {
     setLoading(true);
+
     try {
-      if (!selectedOption) {
+      if (!role_id) {
         errorMessage('Role Selection', 'Kindly select role for this user');
         return;
       }
+      if (!firstName) {
+        errorMessage(
+          'FirstName Input',
+          'Kindly Enter First Name for this User',
+        );
+        return;
+      }
+      if (!lastName) {
+        errorMessage('Last Name Input', 'Kindly Enter Last Name for this User');
+        return;
+      }
+      if (!email || email.trim() === '') {
+        errorMessage('Email Input', 'Kindly Enter Email for this User');
+        return;
+      }
+
+      // Check email format with regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        errorMessage('Invalid Email', 'Kindly enter a valid email address');
+        return;
+      }
+
+      if (!password) {
+        errorMessage('Password Input', 'Kindly Enter Password for this User');
+        return;
+      }
+      console.log('\n\n\n Form Values:', {
+        selectedOption,
+        firstName,
+        lastName,
+        email,
+        password,
+        role_id,
+      });
       const response = await signupApi(
         email,
         password,
         firstName,
         lastName,
-        selectedOption,
+        role_id,
       );
       const data = await response.json();
       console.log(data);
@@ -89,6 +131,7 @@ export default function AddUserForm() {
           console.log(roles[buttonIndex - 1]);
           const selectedUser = roles[buttonIndex - 1];
           setSelectedOption(selectedUser.id);
+          setRole_id(selectedUser.id); // <-- ADD THIS
         }
       },
     );
@@ -109,7 +152,7 @@ export default function AddUserForm() {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+    <SafeAreaView style={{flex: 1}} edges={['left', 'right']}>
       <ScrollView style={styles.form}>
         <View>
           <Text
@@ -239,7 +282,13 @@ export default function AddUserForm() {
                   height: 50,
                   marginBottom: 12,
                 }}>
-                <Picker selectedValue={selectedOption} style={styles.picker}>
+                <Picker
+                  selectedValue={selectedOption}
+                  onValueChange={value => {
+                    setSelectedOption(value);
+                    setRole_id(value); // <-- ADD THIS
+                  }}
+                  style={styles.picker}>
                   {roles &&
                     roles.map(role => (
                       <Picker.Item
@@ -287,8 +336,9 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     paddingHorizontal: 40,
     backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    // borderTopLeftRadius: 30,
+    // borderTopRightRadius: 30,
+    height: '100%',
     flexGrow: 1,
   },
   formLabel: {

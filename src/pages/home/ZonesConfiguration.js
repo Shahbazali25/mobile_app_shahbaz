@@ -60,6 +60,8 @@ function ZonesConfiguration() {
         text1: `Zone deleted`,
         text2: `${zoneToDelete.name} deleted Successfully`,
       });
+          allZones();
+
     } else {
       Toast.show({
         type: 'error',

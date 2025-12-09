@@ -14,8 +14,8 @@ import PrimaryBtn from '../buttons/primaryBtn';
 import {loginAPI} from '../../components/apis/authentication/loginApi';
 
 export default function LoginFormV2() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('base_user@mail.com');
+  const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();

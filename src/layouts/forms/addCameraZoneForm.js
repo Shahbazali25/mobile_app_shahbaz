@@ -201,9 +201,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignSelf: 'stretch',
     paddingHorizontal: 40,
+    paddingTop: 20,
     backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    // borderTopLeftRadius: 30,
+    // borderTopRightRadius: 30,
     flexGrow: 1,
   },
   formLabel: {

@@ -81,7 +81,7 @@ export default function EditUserForm({user_id, cloud_id}) {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#1E293B'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#ffffffff'}}  edges={['left', 'right']}  >
       <ScrollView style={styles.form}>
         <View>
           <Text

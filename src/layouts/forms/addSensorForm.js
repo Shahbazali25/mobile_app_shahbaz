@@ -259,8 +259,10 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     paddingHorizontal: 40,
     backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+        // paddingTop: 20,
+
+    // borderTopLeftRadius: 30,
+    // borderTopRightRadius: 30,
     flexGrow: 1,
   },
   formLabel: {

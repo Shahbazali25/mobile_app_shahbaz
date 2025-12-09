@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC WHEP Player - Ibex Vision</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            min-height: 400px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-play {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-play:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-stop {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-stop:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-stop:disabled,
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #2196F3;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎥 WebRTC Live Stream</h1>
+        <p class="subtitle">Ultra-low latency WebRTC playback via WHEP protocol</p>
+
+        <div id="status" class="status info">
+            Ready to play. Click "Play Stream" to start.
+        </div>
+
+        <div class="video-wrapper">
+            <video id="video" autoplay playsinline muted controls></video>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                Connecting...
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="playBtn" class="btn-play">▶️ Play Stream</button>
+            <button id="stopBtn" class="btn-stop" disabled>⏹️ Stop Stream</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Connection State</div>
+                <div class="stat-value" id="connectionState">disconnected</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">ICE State</div>
+                <div class="stat-value" id="iceState">new</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Latency</div>
+                <div class="stat-value" id="latency">~1s</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hardcoded stream URL
+        const STREAM_PATH = '0f300817fdd843cab50cfa01b0bfdb37/1/2ccf679a131c-21';
+        const STREAM_URL = `https://stream-tst-sbx.ibexvision.ai/port/8889/${encodeURIComponent(STREAM_PATH)}/whep?token=wbkg628e5blfredpu6mksp`;
+        
+        console.log('Stream URL:', STREAM_URL);
+
+        const video = document.getElementById('video');
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+        const loading = document.getElementById('loading');
+        const connectionState = document.getElementById('connectionState');
+        const iceState = document.getElementById('iceState');
+
+        let pc = null;
+        let sessionUrl = null;
+        let eTag = null;
+
+        function updateStatus(message, type = 'info') {
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function showLoading(show) {
+            loading.classList.toggle('active', show);
+        }
+
+        async function playStream() {
+            try {
+                updateStatus('Initializing WebRTC connection...', 'info');
+                showLoading(true);
+                playBtn.disabled = true;
+
+                // Create peer connection
+                pc = new RTCPeerConnection({
+                    iceServers: [{
+                        urls: 'stun:stun.l.google.com:19302'
+                    }]
+                });
+
+                // Handle connection state changes
+                pc.onconnectionstatechange = () => {
+                    connectionState.textContent = pc.connectionState;
+                    console.log('Connection state:', pc.connectionState);
+                    
+                    if (pc.connectionState === 'connected') {
+                        updateStatus('✅ Stream connected successfully!', 'success');
+                        showLoading(false);
+                    } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+                        updateStatus('❌ Connection failed or disconnected', 'error');
+                        showLoading(false);
+                    }
+                };
+
+                pc.oniceconnectionstatechange = () => {
+                    iceState.textContent = pc.iceConnectionState;
+                    console.log('ICE state:', pc.iceConnectionState);
+                };
+
+                // Handle incoming tracks
+                pc.ontrack = (event) => {
+                    console.log('Received track:', event.track.kind);
+                    video.srcObject = event.streams[0];
+                };
+
+                // Add transceivers for receiving video and audio
+                pc.addTransceiver('video', { direction: 'recvonly' });
+                pc.addTransceiver('audio', { direction: 'recvonly' });
+
+                // Create and set local offer
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+
+                // Send offer to WHEP endpoint
+                console.log('Sending offer to:', STREAM_URL);
+                const response = await fetch(STREAM_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/sdp',
+                    },
+                    body: offer.sdp
+                });
+
+                if (!response.ok) {
+                    throw new Error(`WHEP request failed: ${response.status} ${response.statusText}`);
+                }
+
+                // Get session URL and ETag for cleanup
+                sessionUrl = response.headers.get('Location');
+                eTag = response.headers.get('E-Tag');
+                
+                // Set remote answer
+                const answer = await response.text();
+                await pc.setRemoteDescription({
+                    type: 'answer',
+                    sdp: answer
+                });
+
+                stopBtn.disabled = false;
+                updateStatus('Connecting to stream...', 'info');
+
+            } catch (error) {
+                console.error('Error playing stream:', error);
+                updateStatus(`❌ Error: ${error.message}`, 'error');
+                showLoading(false);
+                playBtn.disabled = false;
+                if (pc) {
+                    pc.close();
+                    pc = null;
+                }
+            }
+        }
+
+        async function stopStream() {
+            try {
+                updateStatus('Stopping stream...', 'info');
+
+                // Delete session on server if we have session URL
+                if (sessionUrl && eTag) {
+                    try {
+                        await fetch(sessionUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'If-Match': eTag
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Error deleting session:', e);
+                    }
+                }
+
+                // Close peer connection
+                if (pc) {
+                    pc.close();
+                    pc = null;
+                }
+
+                // Clear video
+                video.srcObject = null;
+
+                sessionUrl = null;
+                eTag = null;
+
+                playBtn.disabled = false;
+                stopBtn.disabled = true;
+
+                connectionState.textContent = 'disconnected';
+                iceState.textContent = 'closed';
+
+                updateStatus('Stream stopped', 'info');
+
+            } catch (error) {
+                console.error('Error stopping stream:', error);
+                updateStatus(`Error stopping: ${error.message}`, 'error');
+            }
+        }
+
+        // Event listeners
+        playBtn.addEventListener('click', playStream);
+        stopBtn.addEventListener('click', stopStream);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (pc) {
+                stopStream();
+            }
+        });
+    </script>
+</body>
+</html>
+ 

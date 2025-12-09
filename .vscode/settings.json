@@ -1,0 +1,5 @@
+{
+    "interactiveWindow.promptToSaveOnClose": true,
+    "notebook.formatOnSave.enabled": true,
+    "files.autoSaveWhenNoErrors": true
+}

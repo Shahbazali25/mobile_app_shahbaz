@@ -12,15 +12,15 @@ function AddCamera() {
         backgroundColor="#1E293B"
         barStyle="light-content"
       />
-      <View style={styles.navbarContainer}>
+      <View style={styles.headerContainer}>
         <NavBar
           Content="Add New Camera"
           BackAction="Cameras"
           showThirdBtn={false}
-          textStyle={{color: '#fff'}}
+          // textStyle={{color: '#fff'}}
         />
-      </View>
       <AddCameraForm />
+      </View>
     </SafeAreaView>
   );
 }
@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#1E293B',
+  },
+    headerContainer: {
+    backgroundColor: 'white',
+    height: '100%',
   },
 });
 

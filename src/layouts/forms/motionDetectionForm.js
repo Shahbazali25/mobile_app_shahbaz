@@ -61,8 +61,8 @@ export default function MotionDetectionForm({camera_id, stream_link}) {
         const role = await checkUserRole();
         setUserRole(role);
         const result = await getDetectionStatus(camera_id);
-        // const latestFrame = await getLastFrame(camera_id);
-        // setFrameImage({uri: latestFrame});
+        const latestFrame = await getLastFrame(camera_id);
+        setFrameImage({uri: latestFrame});
         setIsAlertsEnabled(result.detectionEnabled);
         setStatus(result);
       } catch (error) {
@@ -110,16 +110,20 @@ export default function MotionDetectionForm({camera_id, stream_link}) {
   const fetchRandomFrame = async () => {
     setLoadingFrame(true);
     try {
+      console.log(" im in try of fetchROI frame ******  ");
       setShowROIEditor(true);
       setZonees([]);
       setCurrentZone(null);
       setIsDrawing(false);
       setShowInstructions(true);
     } catch (error) {
-      console.error('Error fetching frame:', error);
-      errorMessage('Frame Fetch Error', String(error));
+        console.log(" im in catch of fetchROI frame ******  ");
+
+        console.error('Error fetching frame:', error);
+        errorMessage('Frame Fetch Error', String(error));
     } finally {
-      setLoadingFrame(false);
+        console.log(" im in finally of fetchROI frame ******  ");
+        setLoadingFrame(false);
     }
   };
 

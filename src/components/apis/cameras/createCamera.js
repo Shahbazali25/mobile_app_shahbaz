@@ -13,14 +13,24 @@ export const createCamera = async (
 ) => {
   try {
     const auth = await loadData();
-    console.log('AUTH DATA', auth);
+    console.log('\n\n\n++++++ \n\n AUTH DATA', auth);
     const token = auth.access_token;
     console.log('TOKEN:', token);
     if (!token) {
       throw new Error('❌ Unauthorized: No token found');
     }
 
-    console.log('🔍 Fetching camera from:', `${baseURL}/device/command`);
+    console.log('🔍 Fetching camera from:', `${baseURL}/device/command`,
+      '\n deviceId :: ',deviceId,
+      '\n host :: ',host
+      ,'\n username :: ',username
+      ,'\n password :: ',password
+      ,'\n name :: ',name
+      ,'\n mac :: ',mac
+      ,'\n streamInputPath :: ',streamInputPath
+      ,'\n streamKey :: ',streamKey
+      ,'\n authToken :: ',authToken
+     );
 
     const response = await fetch(baseURL + '/device/command', {
       method: 'POST',
@@ -33,16 +43,16 @@ export const createCamera = async (
         deviceId: deviceId,
         commandType: 'camera_create',
         body: {
-          name: name,
           host: host,
-          mac: mac,
+          port: 554,
           username: username,
           password: password,
+          name: name,
+          mac: mac,
           authToken: authToken,
           streamInputPath: streamInputPath,
           streamKey: streamKey,
           is_virtual: false,
-          port: 554,
         },
       }),
     });
@@ -55,7 +65,7 @@ export const createCamera = async (
     }
 
     const cameraId = cameras.data.network_id;
-    console.log;
+    console.log("cameraId :: ",cameraId);
     const bindingResponse = await fetch(baseURL + '/device/bind-camera', {
       method: 'POST',
       headers: {
