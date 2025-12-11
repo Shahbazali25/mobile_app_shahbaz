@@ -22,7 +22,6 @@ import {loadData} from '../../components/auth/loadData';
 import {baseURL, deviceId} from '../../components/utils/baseUrl';
 import RNFS from 'react-native-fs';
 import {PermissionsAndroid} from 'react-native';
-
 const {width, height} = Dimensions.get('window');
 
 function RecordingPage() {
