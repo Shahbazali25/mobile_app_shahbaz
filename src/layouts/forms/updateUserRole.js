@@ -14,12 +14,16 @@ import AnimatedLottieView from 'lottie-react-native';
 import {getAllRoles} from '../../components/apis/users/getAllRoles';
 import {updateRole} from '../../components/apis/users/updateRole';
 import errorMessage from '../../components/utils/errorMessage';
-
+import CustomGenericPicker from '../CustomGenericPicker';
 export default function UpdateUserRole({cloud_id, role_id, email}) {
   const animation = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const [roles, setRoles] = useState(null);
   const [selectedOption, setSelectedOption] = useState(role_id && role_id);
+const roleOptions = roles?.map(r => ({
+  label: r.name,
+  value: r.id,
+}));
 
   useEffect(() => {
     animation.current?.play();
@@ -103,69 +107,25 @@ export default function UpdateUserRole({cloud_id, role_id, email}) {
   return (
     <ScrollView style={styles.form}>
       <Text
-        aria-label="Label for Username"
-        nativeID="labelUsername"
-        style={[styles.sectionLabel, {marginTop: 12}]}>
-        Update User Role
-      </Text>
-      {roles &&
-        Platform.select({
-          ios: (
-            <TouchableOpacity
-              onPress={onPress}
-              style={{
-                borderWidth: 1,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                alignSelf: 'center',
-                borderColor: '#1E293B',
-                borderRadius: 4,
-                padding: 8,
-                width: '100%',
-                marginTop: 4,
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 12,
-                  color: '#1E293B',
-                  alignSelf: 'center',
-                }}>
-                {(selectedOption &&
-                  roles.find(role => role.id === selectedOption)?.name) ||
-                  'Select Role'}
-              </Text>
-            </TouchableOpacity>
-          ),
-          android: (
-            <Picker
-              selectedValue={selectedOption}
-              onValueChange={itemValue => setSelectedOption(itemValue)}
-              style={styles.picker}>
-              {roles &&
-                roles.map(role => (
-                  <Picker.Item
-                    label={role.name}
-                    key={role.id}
-                    value={role.id}
-                    style={{
-                      fontFamily: 'Poppins-Regular',
-                      fontSize: 12,
-                      borderRadius: 15,
-                    }}
-                  />
-                ))}
-            </Picker>
-          ),
-        })}
-      <TouchableOpacity onPress={assignRole}>
-        <Text style={styles.button}>
-          {isLoading ? 'Updating Role...' : 'Update Role'}
-        </Text>
-      </TouchableOpacity>
+  aria-label="Label for Username"
+  nativeID="labelUsername"
+  style={[styles.sectionLabel, {marginTop: 12}]}>
+  Update User Role
+</Text>
+
+<CustomGenericPicker
+  options={roleOptions}
+  selectedValue={selectedOption}
+  onValueChange={(value) => setSelectedOption(value)}
+  placeholder="Select Role"
+/>
+
+<TouchableOpacity onPress={assignRole}>
+  <Text style={styles.button}>
+    {isLoading ? 'Updating Role...' : 'Update Role'}
+  </Text>
+</TouchableOpacity>
+
     </ScrollView>
   );
 }
@@ -181,6 +141,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     textAlign: 'center',
     marginBottom: 25,
+    marginTop: 10,
   },
   container: {
     flex: 1,
