@@ -1,3 +1,4 @@
+//recordingpage
 import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
@@ -500,7 +501,20 @@ function RecordingPage() {
             let centerPlayButton;
             let customControls;
             let hideControlsTimeout;
-            
+
+            // Disable fullscreen button on iOS
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                const fsBtn = document.getElementById('fullscreen-btn');
+                if (fsBtn) {
+                    fsBtn.style.display = 'none';
+                }
+                window.toggleFullscreen = function() {
+                    // Do nothing
+                };
+            }
+
+
+
             function initializeControls() {
               video = document.getElementById('video-player');
               centerPlayButton = document.getElementById('center-play-button');
@@ -923,7 +937,7 @@ function RecordingPage() {
               ref={webViewRef}
               source={{html: generateVideoHTML(videoUrl)}}
               style={styles.webView}
-              allowsFullscreenVideo={true}
+              allowsFullscreenVideo={false}
               allowsInlineMediaPlayback={true}
               mediaPlaybackRequiresUserAction={false}
               javaScriptEnabled={true}
