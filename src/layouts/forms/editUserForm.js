@@ -43,8 +43,15 @@ export default function EditUserForm({user_id, cloud_id}) {
   };
 
   const userUpdate = async () => {
+    if (!firstName || !lastName || !email || !password) {
+      errorMessage('Validation Error', 'Please fill all the fields');
+      return;
+    }
     setLoading(true);
+
     try {
+      
+      console.log('Updating user...', firstName,',', lastName,  ',', email, ',', password,  ',', user_id);
       const response = await updateUserProfile(
         firstName,
         lastName,
@@ -60,7 +67,7 @@ export default function EditUserForm({user_id, cloud_id}) {
         });
       }
     } catch (error) {
-      errorMessage('Camera Creation Error', error.message);
+      errorMessage('User Update Error', error.message);
     } finally {
       setLoading(false);
     }

@@ -20,6 +20,7 @@ import Video from 'react-native-video';
 
 import {loadData} from '../../components/auth/loadData';
 import {baseURL, deviceId} from '../../components/utils/baseUrl';
+import CustomGenericPicker from '../../layouts/CustomGenericPicker';
 
 export default function Recordings() {
   const animation = useRef(null);
@@ -88,6 +89,7 @@ export default function Recordings() {
         {label: 'All Zones', value: 'all'},
         ...uniqueZones.map(zone => ({label: zone, value: zone})),
       ]);
+      console.log('updating zoneOptions on line 102 ::', zoneOptions);
 
       const uniqueDates = [
         ...new Set(allRecordings.map(rec => parseDateTime(rec.savedDate).date)),
@@ -104,7 +106,6 @@ export default function Recordings() {
         {label: 'All Times', value: 'all'},
         ...uniqueTimes.map(time => ({label: time, value: time})),
       ]);
-      console.log('updating recordings on line 102 ::', allRecordings);
       setFilteredRecordings(allRecordings);
     }
   }, [allRecordings]);
@@ -292,7 +293,7 @@ export default function Recordings() {
         {label: 'All Zones', value: 'all'},
         ...uniqueZones.map(zone => ({label: zone, value: zone})),
       ]);
-      console.log('updating recordings on line 290 ::', allRecordings);
+      console.log('updating zoneOptions line 290 ::', zoneOptions);
 
       setFilteredRecordings(allRecordings);
     }
@@ -406,7 +407,11 @@ export default function Recordings() {
       },
     );
   };
-
+  const timeToMinutes = time => {
+    if (!time) return null;
+    const [h, m] = time.split(':').map(Number);
+    return h * 60 + m;
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* 🔹 Dark header area */}
@@ -423,82 +428,86 @@ export default function Recordings() {
         <Text style={{fontFamily: 'Poppins-SemiBold', fontSize: 16}}>
           Filters
         </Text>
-        <View 
-         style={{
+        <View
+          style={{
             paddingHorizontal: 10,
-            paddingBottom:10,
+            paddingBottom: 10,
             borderWidth: 1,
             borderColor: '#dbd3d3ff',
             borderRadius: 8,
-          }}
-          >
-
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: 'space-between',
-            
           }}>
-          {Platform.select({
-            ios: (
-              <TouchableOpacity
-                onPress={onPress}
-                style={{
-                  borderWidth: 1,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderColor: '#1E293B',
-                  borderRadius: 4,
-                  padding: 8,
-                  width: '45%',
-                  marginTop: 4,
-                  marginBottom: 10,
-                }}>
-                <Text
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
+            {Platform.select({
+              ios: (
+                <TouchableOpacity
+                  onPress={onPress}
                   style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 12,
-                    color: '#1E293B',
+                    borderWidth: 1,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     alignSelf: 'center',
+                    borderColor: '#1E293B',
+                    borderRadius: 4,
+                    padding: 8,
+                    width: '45%',
+                    marginTop: 4,
+                    marginBottom: 10,
                   }}>
-                  {(selectedZone &&
-                    zoneOptions.find(zone => zone.id === selectedZone)?.name) ||
-                    'Select Zone'}
-                </Text>
-              </TouchableOpacity>
-            ),
-            android: (
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '45%',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 13,
-                    marginTop: 10,
-                    color: 'gray',
-                  }}>
-                  Select Zone
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 12,
+                      color: '#1E293B',
+                      alignSelf: 'center',
+                    }}>
+                    {(selectedZone &&
+                      zoneOptions.find(zone => zone.id === selectedZone)
+                        ?.name) ||
+                      'Select Zone'}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              android: (
                 <View
                   style={{
-                    backgroundColor: '#E7E7E7',
-                    borderRadius: 40,
-                    overflow: 'hidden', // Ensures corners are clipped
-                    width: '100%',
-                    height: 50,
-                    justifyContent: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '45%',
                   }}>
-                  <Picker
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 13,
+                      marginTop: 10,
+                      color: 'gray',
+                    }}>
+                    Select Zone
+                  </Text>
+                  <View
+                    style={{
+                      backgroundColor: '#E7E7E7',
+                      borderRadius: 40,
+                      overflow: 'hidden', // Ensures corners are clipped
+                      width: '100%',
+                      height: 50,
+                      justifyContent: 'center',
+                    }}>
+                    <CustomGenericPicker
+                      options={zoneOptions} // [{ label: 'Zone 1', value: 1 }, ...]
+                      selectedValue={selectedZone}
+                      onValueChange={setSelectedZone}
+                      placeholder="Select Zone"
+                    />
+                    {/* <Picker
                     selectedValue={selectedZone}
                     onValueChange={itemValue => setSelectedZone(itemValue)}
                     dropdownIconColor={'black'}
@@ -521,179 +530,118 @@ export default function Recordings() {
                         }}
                       />
                     ))}
-                  </Picker>
-                </View>
-              </View>
-            ),
-          })}
-          {Platform.select({
-            ios: (
-              <TouchableOpacity
-                onPress={onPressCamera}
-                style={{
-                  borderWidth: 1,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderColor: '#1E293B',
-                  borderRadius: 4,
-                  padding: 8,
-                  width: '45%',
-                  marginTop: 4,
-                  marginBottom: 10,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 12,
-                    color: '#1E293B',
-                    alignSelf: 'center',
-                  }}>
-                  {(selectedCamera &&
-                    cameraOptions.find(zone => zone.id === selectedCamera)
-                      ?.name) ||
-                    'Select Camera'}
-                </Text>
-              </TouchableOpacity>
-            ),
-            android: (
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '45%',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 13,
-                    marginTop: 10,
-                    color: 'gray',
-                  }}>
-                  Select Camera
-                </Text>
-                <View
-                  style={{
-                    backgroundColor: '#E7E7E7',
-                    borderRadius: 20,
-                    overflow: 'hidden', // ensures corners clip
-                    width: '100%',
-                    height: 50,
-                    justifyContent: 'center',
-                  }}>
-                  <Picker
-                    selectedValue={selectedCamera}
-                    onValueChange={itemValue => setSelectedCamera(itemValue)}
-                    dropdownIconColor="black"
-                    style={{
-                      width: '100%',
-                      height: 50,
-                      color: 'black',
-                      fontFamily: 'Poppins-Regular',
-                    }}>
-                    {cameraOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={{
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 12,
-                        }}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-              </View>
-            ),
-          })}
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: 'space-between',
-          }}>
-          {Platform.select({
-            ios: (
-              <>
-                <TouchableOpacity
-                  onPress={onPressStartDate}
-                  style={styles.filterTouchable}>
-                  <Text style={styles.filterText}>
-                    {selectedStartDate || 'Start Date'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onPressEndDate}
-                  style={styles.filterTouchable}>
-                  <Text style={styles.filterText}>
-                    {selectedEndDate || 'End Date'}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ),
-            android: (
-              <>
-                <View style={{width: '45%'}}>
-                  <Text style={styles.pickerLabel}>Start Date</Text>
-                  <View
-                    style={{
-                      backgroundColor: '#E7E7E7',
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                      height: 50,
-                      justifyContent: 'center',
-                    }}>
-                    <Picker
-                      selectedValue={selectedStartDate}
-                      onValueChange={itemValue =>
-                        setSelectedStartDate(itemValue)
-                      }
-                      dropdownIconColor={'black'}
-                      dropdownIconRippleColor={'#1E293B'}
-                      style={{
-                        width: '100%',
-                        height: 50,
-                        color: 'black',
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {dateOptions.map((item, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={item.label}
-                          value={item.value}
-                          style={{
-                            fontFamily: 'Poppins-Regular',
-                            fontSize: 12,
-                          }}
-                        />
-                      ))}
-                    </Picker>
+                  </Picker> */}
                   </View>
                 </View>
-
-                <View style={{width: '45%'}}>
-                  <Text style={styles.pickerLabel}>End Date</Text>
-                  <View
+              ),
+            })}
+            {Platform.select({
+              ios: (
+                <TouchableOpacity
+                  onPress={onPressCamera}
+                  style={{
+                    borderWidth: 1,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderColor: '#1E293B',
+                    borderRadius: 4,
+                    padding: 8,
+                    width: '45%',
+                    marginTop: 4,
+                    marginBottom: 10,
+                  }}>
+                  <Text
                     style={{
-                      backgroundColor: '#E7E7E7',
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                      height: 50,
-                      justifyContent: 'center',
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 12,
+                      color: '#1E293B',
+                      alignSelf: 'center',
                     }}>
-                    <Picker
+                    {(selectedCamera &&
+                      cameraOptions.find(zone => zone.id === selectedCamera)
+                        ?.name) ||
+                      'Select Camera'}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              android: (
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '45%',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 13,
+                      marginTop: 10,
+                      color: 'gray',
+                    }}>
+                    Select Camera
+                  </Text>
+
+                  <CustomGenericPicker
+                    options={cameraOptions}
+                    selectedValue={selectedCamera}
+                    onValueChange={value => setSelectedCamera(value)}
+                    placeholder="Select Camera"
+                  />
+                </View>
+              ),
+            })}
+          </View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
+            {Platform.select({
+              ios: (
+                <>
+                  <TouchableOpacity
+                    onPress={onPressStartDate}
+                    style={styles.filterTouchable}>
+                    <Text style={styles.filterText}>
+                      {selectedStartDate || 'Start Date'}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={onPressEndDate}
+                    style={styles.filterTouchable}>
+                    <Text style={styles.filterText}>
+                      {selectedEndDate || 'End Date'}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ),
+              android: (
+                <>
+                  <View style={{width: '45%'}}>
+                    <Text style={styles.pickerLabel}>Start Date</Text>
+
+                    <CustomGenericPicker
+                      options={dateOptions}
+                      selectedValue={selectedStartDate}
+                      onValueChange={value => setSelectedStartDate(value)}
+                      placeholder="Select Start Date"
+                    />
+                  </View>
+
+                  <View style={{width: '45%'}}>
+                    <Text style={styles.pickerLabel}>End Date</Text>
+
+                    <CustomGenericPicker
+                      options={dateOptions}
                       selectedValue={selectedEndDate}
-                      onValueChange={itemValue => {
-                        if (
-                          selectedStartDate &&
-                          itemValue <= selectedStartDate
-                        ) {
+                      onValueChange={value => {
+                        if (selectedStartDate && value <= selectedStartDate) {
                           Toast.show({
                             type: 'error',
                             text1: 'Invalid Date Range',
@@ -701,124 +649,84 @@ export default function Recordings() {
                           });
                           return;
                         }
-                        setSelectedEndDate(itemValue);
+                        setSelectedEndDate(value);
                       }}
-                      dropdownIconColor={'black'}
-                      dropdownIconRippleColor={'#1E293B'}
-                      style={{
-                        width: '100%',
-                        height: 50,
-                        color: 'black',
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {dateOptions.map((item, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={item.label}
-                          value={item.value}
-                          style={{
-                            fontFamily: 'Poppins-Regular',
-                            fontSize: 12,
-                          }}
-                        />
-                      ))}
-                    </Picker>
+                      placeholder="Select End Date"
+                    />
                   </View>
-                </View>
-              </>
-            ),
-          })}
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: 'space-between',
-          }}>
-          {Platform.select({
-            ios: (
-              <>
-                <TouchableOpacity
-                  onPress={onPressStartTime}
-                  style={styles.filterTouchable}>
-                  <Text style={styles.filterText}>
-                    {selectedStartTime || 'Start Time'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onPressEndTime}
-                  style={styles.filterTouchable}>
-                  <Text style={styles.filterText}>
-                    {selectedEndTime || 'End Time'}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ),
-            android: (
-              <>
-                <View style={{width: '45%'}}>
-                  <Text style={styles.pickerLabel}>Start Time</Text>
-                  <View style={styles.pickerWrapper}>
-                    <Picker
-                      selectedValue={selectedStartTime}
-                      onValueChange={itemValue =>
-                        setSelectedStartTime(itemValue)
-                      }
-                      dropdownIconColor={'black'}
-                      dropdownIconRippleColor={'#1E293B'}
-                      style={styles.picker}>
-                      {timeOptions.map((item, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={item.label}
-                          value={item.value}
-                          style={styles.pickerItem}
-                        />
-                      ))}
-                    </Picker>
-                  </View>
-                </View>
+                </>
+              ),
+            })}
+          </View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
+            {Platform.select({
+              ios: (
+                <>
+                  <TouchableOpacity
+                    onPress={onPressStartTime}
+                    style={styles.filterTouchable}>
+                    <Text style={styles.filterText}>
+                      {selectedStartTime || 'Start Time'}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={onPressEndTime}
+                    style={styles.filterTouchable}>
+                    <Text style={styles.filterText}>
+                      {selectedEndTime || 'End Time'}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ),
+              android: (
+                <>
+                  <View style={{width: '45%'}}>
+                    <Text style={styles.pickerLabel}>Start Time</Text>
 
-                <View style={{width: '45%'}}>
-                  <Text style={styles.pickerLabel}>End Time</Text>
-                  <View style={styles.pickerWrapper}>
-                    <Picker
-                      selectedValue={selectedEndTime}
-                      onValueChange={itemValue => {
-                        // Validate end time
-                        if (
-                          selectedStartTime &&
-                          itemValue <= selectedStartTime
-                        ) {
-                          Toast.show({
-                            type: 'error',
-                            text1: 'Invalid Time Range',
-                            text2: 'End time must be after start time.',
-                          });
-                          return;
-                        }
-                        setSelectedEndTime(itemValue);
-                      }}
-                      dropdownIconColor={'black'}
-                      dropdownIconRippleColor={'#1E293B'}
-                      style={styles.picker}>
-                      {timeOptions.map((item, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={item.label}
-                          value={item.value}
-                          style={styles.pickerItem}
-                        />
-                      ))}
-                    </Picker>
+                    <CustomGenericPicker
+                      options={timeOptions}
+                      selectedValue={selectedStartTime}
+                      onValueChange={value => setSelectedStartTime(value)}
+                      placeholder="Select Start Time"
+                    />
                   </View>
-                </View>
-              </>
-            ),
-          })}
-        </View>
+
+                  <View style={{width: '45%'}}>
+  <Text style={styles.pickerLabel}>End Time</Text>
+
+  <CustomGenericPicker
+    options={timeOptions}
+    selectedValue={selectedEndTime}
+    placeholder="Select End Time"
+    onValueChange={value => {
+      const start = timeToMinutes(selectedStartTime);
+      const end = timeToMinutes(value);
+
+      if (start !== null && end <= start) {
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Time Range',
+          text2: 'End time must be after start time.',
+        });
+        return;
+      }
+
+      setSelectedEndTime(value);
+    }}
+  />
+</View>
+
+                </>
+              ),
+            })}
+          </View>
         </View>
       </View>
       <ScrollView style={styles.form}>

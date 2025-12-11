@@ -392,7 +392,7 @@ function Cameras({userData}) {
 
   const renderCameraItem = ({item}) => {
     const hasHls = isConnected ? item.cloudHls : item.localHls;
-    console.log('\n\n\n\n ############\n\n renderCameraItem item:', item);
+    // console.log('\n\n\n\n ############\n\n renderCameraItem item:', item);
 
     const truncatedName = shortenName(20, item.name, 'Unnamed Camera');
     let rtcUrl =
