@@ -24,12 +24,15 @@ console.log("selectedValues: ", selectedValues);
 
     if (selectedValues.includes(value)) {
       updatedList = selectedValues.filter(v => v !== value);   // remove
+      console.log(" Removing value: ", value);
     } else {
       updatedList = [...selectedValues, value];                // add
+      console.log(" Adding value: ", value);
     }
 
     onValueChange(updatedList);
     console.log("Toggled Values: ", updatedList);
+    console.log("Current selectedValues prop: ", selectedValues);
   };
 
   const selectedLabels = validOptions

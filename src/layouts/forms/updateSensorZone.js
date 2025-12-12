@@ -153,7 +153,7 @@ export default function UpdateSensorZone({sensorId}) {
         }
         selectedValues={assignedZones}
         placeholder="Select Zone"
-        onValueChange={value => setSelectedOption(value)}
+        onValueChange={updatedList => setAssignedZones(updatedList)}
       />
 
       <TouchableOpacity onPress={assignZone}>
