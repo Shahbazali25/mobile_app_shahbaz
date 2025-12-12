@@ -126,7 +126,7 @@ function EditUserProfile() {
        
     } catch (error) {
       console.error('Change Password Error:', error);
-      Alert.alert('Error2', 'Invalid credentials/Network error. Please try again.');
+      Alert.alert('Error', 'Invalid credentials/Network error. Please try again.');
     } finally {
       setLoading(false);
     }
