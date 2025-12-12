@@ -15,10 +15,8 @@ export const user_password_updateAPI = async (old_password, new_password) => {
     const data = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || `HTTP error! status: ${response.status}`,
-      );
+      // const errorData = await response.json();
+      throw new Error(data.message || `HTTP error! status: ${response.status}`);
     }
 
     console.log('User password updated:', data);
@@ -26,7 +24,10 @@ export const user_password_updateAPI = async (old_password, new_password) => {
     if (data.user) {
       await AsyncStorage.setItem('userData', JSON.stringify(data.user));
     }
-
+    // 💡 HERE: add your custom success tag
+    if (response.ok && response.status === 200) {
+      data.status = 'success';
+    }
     return data;
   } catch (error) {
     console.log('API Error:', error);

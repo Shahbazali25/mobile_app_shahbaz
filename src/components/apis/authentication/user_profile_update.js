@@ -8,7 +8,7 @@ export const user_profile_updateAPI = async (
   lastName,
 ) => {
   try {
-    console.log('Updating profile with:', {id, email, firstName, lastName});
+    console.log('Updating profile withapi got this:', {id, email, firstName, lastName});
 
     const response = await fetch(`${baseURL}/user/`, {
       method: 'PATCH',
