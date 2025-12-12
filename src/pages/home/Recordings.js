@@ -345,14 +345,7 @@ export default function Recordings() {
             name: item.name,
           })
         }>
-        {/* <Video
-  source={{
-    uri: "https://can-log-input-bucket-css.s3.us-east-1.amazonaws.com/recordings/1/c26ea016-d6ea-4df2-a313-85e273811750-2ccf679a131c-77%7C2025-11-24_20-36-09-710394.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAYZZGS3RC33WXY7W5%2F20251124%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251124T153734Z&X-Amz-Expires=3600&X-Amz-Signature=1013a8c439b8529ee0ebc98ef9dd880408b0eae43f0f6b9b0db69d8102240aee&X-Amz-SignedHeaders=host&x-id=GetObject"
-  }}
-  controls
-  resizeMode="contain"
-  style={{ width: "100%", height: 300 }}
-/> */}
+       
         <View style={styles.notificationTitle}>
           <Text style={styles.notificationBoldText}>
             {item.name || 'No Title'}
@@ -444,7 +437,7 @@ export default function Recordings() {
               width: '100%',
               justifyContent: 'space-between',
             }}>
-            {Platform.select({
+            {/* {Platform.select({
               ios: (
                 <TouchableOpacity
                   onPress={onPress}
@@ -477,65 +470,65 @@ export default function Recordings() {
                 </TouchableOpacity>
               ),
               android: (
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '45%',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Regular',
-                      fontSize: 13,
-                      marginTop: 10,
-                      color: 'gray',
-                    }}>
-                    Select Zone
-                  </Text>
-                  <View
-                    style={{
-                      backgroundColor: '#E7E7E7',
-                      borderRadius: 40,
-                      overflow: 'hidden', // Ensures corners are clipped
-                      width: '100%',
-                      height: 50,
-                      justifyContent: 'center',
-                    }}>
-                    <CustomGenericPicker
-                      options={zoneOptions} // [{ label: 'Zone 1', value: 1 }, ...]
-                      selectedValue={selectedZone}
-                      onValueChange={setSelectedZone}
-                      placeholder="Select Zone"
-                    />
-                    {/* <Picker
-                    selectedValue={selectedZone}
-                    onValueChange={itemValue => setSelectedZone(itemValue)}
-                    dropdownIconColor={'black'}
-                    dropdownIconRippleColor={'#1E293B'}
-                    style={{
-                      width: '100%',
-                      height: 50,
-                      color: 'black',
-                      fontFamily: 'Poppins-Regular',
-                      paddingHorizontal: 10, // Optional: adds spacing inside
-                    }}>
-                    {zoneOptions.map((item, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={item.label}
-                        value={item.value}
-                        style={{
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 12,
-                        }}
-                      />
-                    ))}
-                  </Picker> */}
-                  </View>
-                </View>
               ),
-            })}
-            {Platform.select({
+            })} */}
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '45%',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 13,
+                  marginTop: 10,
+                  color: 'gray',
+                }}>
+                Select Zone
+              </Text>
+              <CustomGenericPicker
+                options={zoneOptions} // [{ label: 'Zone 1', value: 1 }, ...]
+                selectedValue={selectedZone}
+                onValueChange={setSelectedZone}
+                placeholder="Select Zone"
+              />
+              {/* <View
+                style={{
+                  backgroundColor: '#E7E7E7',
+                  borderRadius: 40,
+                  overflow: 'hidden', // Ensures corners are clipped
+                  width: '100%',
+                  height: 50,
+                  justifyContent: 'center',
+                }}>
+                 <Picker
+                selectedValue={selectedZone}
+                onValueChange={itemValue => setSelectedZone(itemValue)}
+                dropdownIconColor={'black'}
+                dropdownIconRippleColor={'#1E293B'}
+                style={{
+                  width: '100%',
+                  height: 50,
+                  color: 'black',
+                  fontFamily: 'Poppins-Regular',
+                  paddingHorizontal: 10, // Optional: adds spacing inside
+                }}>
+                {zoneOptions.map((item, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={item.label}
+                    value={item.value}
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 12,
+                    }}
+                  />
+                ))}
+              </Picker> 
+              </View> */}
+            </View>
+            {/* {Platform.select({
               ios: (
                 <TouchableOpacity
                   onPress={onPressCamera}
@@ -568,31 +561,31 @@ export default function Recordings() {
                 </TouchableOpacity>
               ),
               android: (
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '45%',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Regular',
-                      fontSize: 13,
-                      marginTop: 10,
-                      color: 'gray',
-                    }}>
-                    Select Camera
-                  </Text>
-
-                  <CustomGenericPicker
-                    options={cameraOptions}
-                    selectedValue={selectedCamera}
-                    onValueChange={value => setSelectedCamera(value)}
-                    placeholder="Select Camera"
-                  />
-                </View>
               ),
-            })}
+            })} */}
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '45%',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 13,
+                  marginTop: 10,
+                  color: 'gray',
+                }}>
+                Select Camera
+              </Text>
+
+              <CustomGenericPicker
+                options={cameraOptions}
+                selectedValue={selectedCamera}
+                onValueChange={value => setSelectedCamera(value)}
+                placeholder="Select Camera"
+              />
+            </View>
           </View>
           <View
             style={{
@@ -602,7 +595,7 @@ export default function Recordings() {
               width: '100%',
               justifyContent: 'space-between',
             }}>
-            {Platform.select({
+            {/* {Platform.select({
               ios: (
                 <>
                   <TouchableOpacity
@@ -622,41 +615,41 @@ export default function Recordings() {
                 </>
               ),
               android: (
-                <>
-                  <View style={{width: '45%'}}>
-                    <Text style={styles.pickerLabel}>Start Date</Text>
-
-                    <CustomGenericPicker
-                      options={dateOptions}
-                      selectedValue={selectedStartDate}
-                      onValueChange={value => setSelectedStartDate(value)}
-                      placeholder="Select Start Date"
-                    />
-                  </View>
-
-                  <View style={{width: '45%'}}>
-                    <Text style={styles.pickerLabel}>End Date</Text>
-
-                    <CustomGenericPicker
-                      options={dateOptions}
-                      selectedValue={selectedEndDate}
-                      onValueChange={value => {
-                        if (selectedStartDate && value <= selectedStartDate) {
-                          Toast.show({
-                            type: 'error',
-                            text1: 'Invalid Date Range',
-                            text2: 'End date must be after start date.',
-                          });
-                          return;
-                        }
-                        setSelectedEndDate(value);
-                      }}
-                      placeholder="Select End Date"
-                    />
-                  </View>
-                </>
               ),
-            })}
+            })} */}
+            <>
+              <View style={{width: '45%'}}>
+                <Text style={styles.pickerLabel}>Start Date</Text>
+
+                <CustomGenericPicker
+                  options={dateOptions}
+                  selectedValue={selectedStartDate}
+                  onValueChange={value => setSelectedStartDate(value)}
+                  placeholder="Select Start Date"
+                />
+              </View>
+
+              <View style={{width: '45%'}}>
+                <Text style={styles.pickerLabel}>End Date</Text>
+
+                <CustomGenericPicker
+                  options={dateOptions}
+                  selectedValue={selectedEndDate}
+                  onValueChange={value => {
+                    if (selectedStartDate && value <= selectedStartDate) {
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Invalid Date Range',
+                        text2: 'End date must be after start date.',
+                      });
+                      return;
+                    }
+                    setSelectedEndDate(value);
+                  }}
+                  placeholder="Select End Date"
+                />
+              </View>
+            </>
           </View>
           <View
             style={{
@@ -666,7 +659,7 @@ export default function Recordings() {
               width: '100%',
               justifyContent: 'space-between',
             }}>
-            {Platform.select({
+            {/* {Platform.select({
               ios: (
                 <>
                   <TouchableOpacity
@@ -686,46 +679,45 @@ export default function Recordings() {
                 </>
               ),
               android: (
-                <>
-                  <View style={{width: '45%'}}>
-                    <Text style={styles.pickerLabel}>Start Time</Text>
-
-                    <CustomGenericPicker
-                      options={timeOptions}
-                      selectedValue={selectedStartTime}
-                      onValueChange={value => setSelectedStartTime(value)}
-                      placeholder="Select Start Time"
-                    />
-                  </View>
-
-                  <View style={{width: '45%'}}>
-  <Text style={styles.pickerLabel}>End Time</Text>
-
-  <CustomGenericPicker
-    options={timeOptions}
-    selectedValue={selectedEndTime}
-    placeholder="Select End Time"
-    onValueChange={value => {
-      const start = timeToMinutes(selectedStartTime);
-      const end = timeToMinutes(value);
-
-      if (start !== null && end <= start) {
-        Toast.show({
-          type: 'error',
-          text1: 'Invalid Time Range',
-          text2: 'End time must be after start time.',
-        });
-        return;
-      }
-
-      setSelectedEndTime(value);
-    }}
-  />
-</View>
-
-                </>
               ),
-            })}
+            })} */}
+            <>
+              <View style={{width: '45%'}}>
+                <Text style={styles.pickerLabel}>Start Time</Text>
+
+                <CustomGenericPicker
+                  options={timeOptions}
+                  selectedValue={selectedStartTime}
+                  onValueChange={value => setSelectedStartTime(value)}
+                  placeholder="Select Start Time"
+                />
+              </View>
+
+              <View style={{width: '45%'}}>
+                <Text style={styles.pickerLabel}>End Time</Text>
+
+                <CustomGenericPicker
+                  options={timeOptions}
+                  selectedValue={selectedEndTime}
+                  placeholder="Select End Time"
+                  onValueChange={value => {
+                    const start = timeToMinutes(selectedStartTime);
+                    const end = timeToMinutes(value);
+
+                    if (start !== null && end <= start) {
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Invalid Time Range',
+                        text2: 'End time must be after start time.',
+                      });
+                      return;
+                    }
+
+                    setSelectedEndTime(value);
+                  }}
+                />
+              </View>
+            </>
           </View>
         </View>
       </View>

@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   pickerButton: {
     backgroundColor: '#E7E7E7',
     borderRadius: 40,
-    height: 50,
+    height: 40,
     paddingHorizontal: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -110,8 +110,8 @@ function EditUserProfile() {
     setLoading(true);
     try {
       const data = await user_password_updateAPI(oldPassword, newPassword);
-
-      Alert.alert('Success', 'Password changed successfully');
+      console.log('Password Change Response:', data);
+      // Alert.alert('Success', 'Password changed successfully');
       setOldPassword('');
       setNewPassword('');
 
