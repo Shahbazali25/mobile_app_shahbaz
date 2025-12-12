@@ -64,24 +64,24 @@ function EditUserProfile() {
   }
 
   const updateProfile = async () => {
-    console.log('Updating profile with:', {
-      email,
-      firstName,
-      lastName,
-      id: route?.params?.id,
-    });
+    // console.log('Updating profile with:', {
+    //   email,
+    //   firstName,
+    //   lastName,
+    //   id: route?.params?.id,
+    // });
     // if (!firstName.trim() || !lastName.trim() || !email.trim()) {
     //   Alert.alert('Error', 'Please fill in all fields');
     //   return;
     // }
     setLoading(true);
     try {
-      console.log('Updating profile with:', {
-        email,
-        firstName,
-        lastName,
-        id: route?.params?.id,
-      });
+      // console.log('Updating profile with:', {
+      //   email,
+      //   firstName,
+      //   lastName,
+      //   id: route?.params?.id,
+      // });
       const data = await user_profile_updateAPI(
         route?.params?.id,
         email,
@@ -108,24 +108,25 @@ function EditUserProfile() {
       return;
     }
     setLoading(true);
+    console.log('changePassword');
+
     try {
       const data = await user_password_updateAPI(oldPassword, newPassword);
-      console.log('Password Change Response:', data);
-      // Alert.alert('Success', 'Password changed successfully');
+      console.log('Password Change Response:', data);      console.log('Change Password Response:', data);
+      // // Alert.alert('Success', 'Password changed successfully');
       setOldPassword('');
       setNewPassword('');
 
-      if (data.user) {
+      if (data.user || data.status === 'success') {
         Alert.alert('Success', 'Password changed successfully');
         // Clear password fields
         setOldPassword('');
         setNewPassword('');
-      } else {
-        Alert.alert('Error', data.message || 'Failed to change password');
-      }
+      } 
+       
     } catch (error) {
       console.error('Change Password Error:', error);
-      Alert.alert('Error', 'Network error. Please try again.');
+      Alert.alert('Error2', 'Invalid credentials/Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -305,7 +306,7 @@ function EditUserProfile() {
                   // add a style to make marginBottom 20
                   style={[styles.formInputText, {marginBottom: 20}]}
                   value={email}
-                  onChangeText={setEmail}
+                  readOnly={true}
                   allowFontScaling={false}
                 />
               </View>
