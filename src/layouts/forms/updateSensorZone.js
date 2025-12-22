@@ -9,17 +9,15 @@ import {
   ActionSheetIOS,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import {Picker} from '@react-native-picker/picker';
 import AnimatedLottieView from 'lottie-react-native';
 import {getAllZones} from '../../components/apis/zones/getAllZones';
 import {zoneAssignToSensor} from '../../components/apis/sensors/zoneAssignToSensor';
-import CustomGenericPicker2 from '../CustomGenericPicker2';
+import CustomGenericPicker from '../CustomGenericPicker';
 export default function UpdateSensorZone({sensorId}) {
   const animation = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const [zones, setZones] = useState(null);
-  const [assignedZones, setAssignedZones] = useState([]);
-
+ 
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
@@ -35,26 +33,16 @@ export default function UpdateSensorZone({sensorId}) {
         setZones(fetchedZones);
 
         if (sensorId) {
-          let foundZoneIds = [];
-
           for (const zone of fetchedZones) {
             if (zone.sensors) {
-              console.log(zone.id + ' == has sensors');
               for (const sensor of zone.sensors) {
                 if (sensor.id === sensorId) {
-                  console.log(
-                    `Sensor ${sensorId} found in zone: ${zone.name} (ID: ${zone.id})`,
-                  );
                   setSelectedOption(zone.id);
-                  foundZoneIds.push(zone.id);
+                  break;
                 }
               }
             }
           }
-
-          setAssignedZones(foundZoneIds);
-          console.log("assignedZones: ", assignedZones);
-
         }
       } catch (error) {
         console.error('Error fetching zones:', error);
@@ -95,14 +83,13 @@ export default function UpdateSensorZone({sensorId}) {
   const assignZone = async () => {
     setLoading(true);
     try {
-      // setSelectedOption(null);
-      console.log(
+       console.log(
         '\n\n *** \nSending this to backend',
         selectedOption,
         sensorId,
       );
       const assign = await zoneAssignToSensor(selectedOption, sensorId);
-      console.log(assign);
+      console.log('\n\n *** \n assign this to assign', assign);
 
       if (assign.data.status === 200) {
         Toast.show({
@@ -121,6 +108,12 @@ export default function UpdateSensorZone({sensorId}) {
       setLoading(false);
     }
   };
+ const zoneOptions = Array.isArray(zones)
+  ? zones.map(zone => ({
+      label: zone.name,
+      value: zone.id,
+    }))
+  : [];
 
   if (isLoading) {
     return (
@@ -161,6 +154,7 @@ export default function UpdateSensorZone({sensorId}) {
           {isLoading ? 'Updating Zone...' : 'Update Zone'}
         </Text>
       </TouchableOpacity>
+
     </ScrollView>
   );
 }

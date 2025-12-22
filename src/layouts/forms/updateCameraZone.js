@@ -14,7 +14,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {getZoneByCamera} from '../../components/apis/zones/getZoneByCamera';
 import {getAllZones} from '../../components/apis/zones/getAllZones';
 import {zoneAssignToCamera} from '../../components/apis/zones/zoneAssignToCamera';
-
+import CustomGenericPicker from '../CustomGenericPicker';
 export default function UpdateCameraZone({camera_id}) {
   const animation = useRef(null);
   const [isLoading, setLoading] = useState(false);
@@ -100,6 +100,10 @@ export default function UpdateCameraZone({camera_id}) {
       },
     );
   };
+const zoneOptions = zones?.map(zone => ({
+  label: zone.name,
+  value: zone.id,
+}));
 
   if (isLoading) {
     return (
@@ -118,69 +122,28 @@ export default function UpdateCameraZone({camera_id}) {
   return (
     <ScrollView style={styles.form}>
       <Text
-        aria-label="Label for Username"
-        nativeID="labelUsername"
-        style={[styles.sectionLabel, {marginTop: 12}]}>
-        Zones
-      </Text>
-      {zones &&
-        Platform.select({
-          ios: (
-            <TouchableOpacity
-              onPress={onPress}
-              style={{
-                borderWidth: 1,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                alignSelf: 'center',
-                borderColor: '#1E293B',
-                borderRadius: 4,
-                padding: 8,
-                width: '100%',
-                marginTop: 4,
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 12,
-                  color: '#1E293B',
-                  alignSelf: 'center',
-                }}>
-                {(selectedOption &&
-                  zones.find(zone => zone.id === selectedOption)?.name) ||
-                  'Select Zone'}
-              </Text>
-            </TouchableOpacity>
-          ),
-          android: (
-            <Picker
-              selectedValue={selectedOption}
-              onValueChange={itemValue => setSelectedOption(itemValue)}
-              style={styles.picker}>
-              {zones &&
-                zones.map(zone => (
-                  <Picker.Item
-                    label={zone.name}
-                    key={zone.id}
-                    value={zone.id}
-                    style={{
-                      fontFamily: 'Poppins-Regular',
-                      fontSize: 12,
-                      borderRadius: 15,
-                    }}
-                  />
-                ))}
-            </Picker>
-          ),
-        })}
-      <TouchableOpacity onPress={assignZone}>
-        <Text style={styles.button}>
-          {isLoading ? 'Updating Zone...' : 'Update Zone'}
-        </Text>
-      </TouchableOpacity>
+  aria-label="Label for Username"
+  nativeID="labelUsername"
+  style={[styles.sectionLabel, { marginTop: 12}]}
+>
+  Zones
+</Text>
+
+{zones?.length > 0 && (
+  <CustomGenericPicker
+    options={zoneOptions}
+    selectedValue={selectedOption}
+    onValueChange={value => setSelectedOption(value)}
+    placeholder="Select Zone"
+  />
+)}
+
+<TouchableOpacity onPress={assignZone}>
+  <Text style={styles.button}>
+    {isLoading ? 'Updating Zone...' : 'Update Zone'}
+  </Text>
+</TouchableOpacity>
+
     </ScrollView>
   );
 }
@@ -196,6 +159,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     textAlign: 'center',
     marginBottom: 25,
+    marginTop: 10,
   },
   container: {
     flex: 1,
