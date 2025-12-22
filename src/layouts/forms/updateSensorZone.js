@@ -137,16 +137,17 @@ export default function UpdateSensorZone({sensorId}) {
         style={[styles.sectionLabel, {marginTop: 12}]}>
         Zones
       </Text>
-
-     {zoneOptions.length > 0 && (
-  <CustomGenericPicker
-    options={zoneOptions}
-    selectedValue={selectedOption}
-    onValueChange={value => setSelectedOption(value)}
-    placeholder="Select Zone"
-  />
-)}
-
+      <CustomGenericPicker2
+        options={
+          zones?.map(zone => ({
+            label: zone.name,
+            value: zone.id,
+          })) || []
+        }
+        selectedValues={assignedZones}
+        placeholder="Select Zone"
+        onValueChange={updatedList => setAssignedZones(updatedList)}
+      />
 
       <TouchableOpacity onPress={assignZone}>
         <Text style={styles.button}>
