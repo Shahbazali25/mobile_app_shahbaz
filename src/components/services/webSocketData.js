@@ -12,7 +12,7 @@ export function useWebSocketData(topic) {
     const handleData = (message) => {
       try {
         const parsedMessage = JSON.parse(message);
-        console.log(`Received data for ${topic}:`, parsedMessage);
+        // console.log(`Receivedss data for ${topic}:`, parsedMessage);
         // Handle batch mode
         if (parsedMessage.batchMode && parsedMessage.messages) {
           const batchData = {};

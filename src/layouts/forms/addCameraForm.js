@@ -33,6 +33,7 @@ export default function AddCameraForm() {
   const cameraCreate = async () => {
     setLoading(true);
     try {
+      console.log('\n\n\n Creating Camera...', name, mac, host, username, password, authToken, streamInputPath, streamKey);
       const create = await createCamera(
         name,
         mac,

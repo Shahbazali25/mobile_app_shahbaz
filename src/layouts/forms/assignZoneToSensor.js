@@ -7,7 +7,7 @@ import {Picker} from '@react-native-picker/picker';
 import PrimaryBtn from '../buttons/primaryBtn';
 import {getAllZones} from '../../components/apis/zones/getAllZones';
 import {zoneAssignToCamera} from '../../components/apis/zones/zoneAssignToCamera';
-
+import CustomGenericPicker from '../CustomGenericPicker';
 export default function AssignZoneToSensor({cameraId}) {
   const animation = useRef(null);
   const [isLoading, setLoading] = useState(false);
@@ -103,6 +103,10 @@ export default function AssignZoneToSensor({cameraId}) {
       </View>
     );
   }
+const zoneOptions = zones?.map(zone => ({
+  label: zone.name,
+  value: zone.id,
+})) || [];
 
   return (
     <ScrollView style={styles.form}>
@@ -120,65 +124,19 @@ export default function AssignZoneToSensor({cameraId}) {
             style={styles.formLabel}>
             Zones
           </Text>
-          {Platform.select({
-            ios: (
-              <TouchableOpacity
-                onPress={onPress}
-                style={{
-                  borderWidth: 1,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderColor: '#1E293B',
-                  borderRadius: 4,
-                  padding: 8,
-                  width: '100%',
-                  marginTop: 4,
-                  marginBottom: 10,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 12,
-                    color: '#1E293B',
-                    alignSelf: 'center',
-                  }}>
-                  {(selectedOption &&
-                    zones.find(zone => zone.id === selectedOption)?.name) ||
-                    'Select Zone'}
-                </Text>
-              </TouchableOpacity>
-            ),
-            android: (
-              <Picker
-                selectedValue={selectedOption}
-                onValueChange={itemValue => setSelectedOption(itemValue)}
-                style={styles.picker}>
-                {zones &&
-                  zones.map(zone => (
-                    <Picker.Item
-                      label={zone.name}
-                      key={zone}
-                      value={zone.id}
-                      style={{
-                        fontFamily: 'Poppins-Regular',
-                        fontSize: 12,
-                        borderRadius: 15,
-                      }}
-                    />
-                  ))}
-              </Picker>
-            ),
-          })}
+           <CustomGenericPicker
+    options={zoneOptions}
+    selectedValue={selectedOption}
+    onValueChange={value => setSelectedOption(value)}
+    placeholder="Select Zone"
+  />
         </View>
       </View>
 
       <View style={{marginBottom: 70, marginTop: 20}}>
         <PrimaryBtn
           onClickMethod={zoneAssign}
-          Content={isLoading ? 'Assigning Zone...' : 'Assign Zone'}
+          Content={isLoading ? 'Assigning Zone...' : 'Assssign Zone'}
         />
       </View>
     </ScrollView>

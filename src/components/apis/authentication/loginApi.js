@@ -11,7 +11,7 @@ export const loginAPI = async (email, password) => {
       body: JSON.stringify({email, password}),
     });
 
-    console.log(response);
+    console.log('this is response', response);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -21,6 +21,7 @@ export const loginAPI = async (email, password) => {
     }
 
     const data = await response.json();
+    const accessToken = data.access_token;
 
     const getRoleResponse = await fetch(
       baseURL + `/device-user/profile/${deviceId}`,
@@ -28,7 +29,7 @@ export const loginAPI = async (email, password) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${response.auth_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       },
     );
