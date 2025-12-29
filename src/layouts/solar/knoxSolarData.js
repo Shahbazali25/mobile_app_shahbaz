@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+/* eslint-disable curly */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect, useMemo} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
@@ -30,7 +33,7 @@ function KnoxSolarData() {
 
     // Grid Status
     const gridPower = parseFloat(
-      solarData['knox/inverter_1/ac_input_total_active_power'] || 0,
+      solarData['knox/inverter_1/grid_voltage'] || 0,
     );
     const gridStatus =
       gridPower < 0
@@ -42,11 +45,11 @@ function KnoxSolarData() {
       gridPower < 0 ? 'right' : gridPower > 0 ? 'left' : null;
 
     const solar_power_1 = parseFloat(
-      solarData['knox/inverter_1/solar_input_power_1'] || 0,
+      solarData['knox/inverter_1/pv1_input_power'] || 0,
     );
 
     const solar_power_2 = parseFloat(
-      solarData['knox/inverter_1/solar_input_power_2'] || 0,
+      solarData['knox/inverter_1/pv2_input_power'] || 0,
     );
 
     // Solar Status
@@ -65,18 +68,37 @@ function KnoxSolarData() {
     );
 
     // Battery Status
-    const batteryPower = battery_voltage * battery_current;
-    const batteryStatus =
-      batteryPower < 0
-        ? {text: 'Discharging', color: '#c30010', bg: '#ffcbd1'}
-        : batteryPower > 0
-        ? {text: 'Charging', color: '#008631', bg: '#d7ffd9'}
-        : {text: 'Idle', color: '#746d69', bg: '#e6e6e6'};
-    const batteryDirection =
-      batteryPower < 0 ? 'up' : batteryPower > 0 ? 'down' : null;
+    const chargingCurrent = parseFloat(
+      String(solarData['knox/inverter_1/battery_charging_current'] || '0'),
+    );
 
+    const dischargingCurrent = parseFloat(
+      String(solarData['knox/inverter_1/battery_discharge_current'] || '0'),
+    );
+
+    const soc = String(
+      solarData['knox/inverter_1/battery_capacity'] || '0%',
+    ).replace(/\s+/g, '');
+
+    let batteryStatus;
+    let batteryDirection = null;
+    let batteryValue = `0 A (${soc})`;
+
+    if (dischargingCurrent > 0) {
+      batteryStatus = {text: 'Discharging', color: '#c30010', bg: '#ffcbd1'};
+      batteryDirection = 'up';
+      batteryValue = `${dischargingCurrent} A (${soc})`;
+    } else if (chargingCurrent > 0) {
+      batteryStatus = {text: 'Charging', color: '#008631', bg: '#d7ffd9'};
+      batteryDirection = 'down';
+      batteryValue = `${chargingCurrent} A (${soc})`;
+    } else {
+      batteryStatus = {text: 'Idle', color: '#746d69', bg: '#e6e6e6'};
+    }
+
+    // Load Status
     const loadPower = parseFloat(
-      solarData['knox/inverter_1/ac_output_total_active_power'] || 0,
+      solarData['knox/inverter_1/ac_output_active_power'] || 0,
     );
     const loadStatus =
       loadPower > 0
@@ -94,6 +116,94 @@ function KnoxSolarData() {
       batteryDirection,
     };
   }, [solarData]);
+
+  const getBatteryInfo = knoxData => {
+    const chargingCurrent = parseFloat(
+      String(knoxData?.['knox/inverter_1/battery_charging_current'] || '0'),
+    );
+
+    const dischargingCurrent = parseFloat(
+      String(knoxData?.['knox/inverter_1/battery_discharge_current'] || '0'),
+    );
+
+    const soc = String(
+      knoxData?.['knox/inverter_1/battery_capacity'] || '0%',
+    ).replace(/\s+/g, '');
+
+    let label;
+    let value;
+
+    if (dischargingCurrent > 0) {
+      label = {text: 'Discharging', color: '#c30010', bg: '#ffcbd1'};
+      value = `${dischargingCurrent} A (${soc})`;
+    } else if (chargingCurrent > 0) {
+      label = {text: 'Charging', color: '#008631', bg: '#d7ffd9'};
+      value = `${chargingCurrent} A (${soc})`;
+    } else {
+      label = {text: 'Idle', color: '#746d69', bg: '#e6e6e6'};
+      value = `0 A (${soc})`;
+    }
+
+    return {label, value};
+  };
+  const batteryInfo = solarData ? getBatteryInfo(solarData) : null;
+
+  // ================= GRID =================
+
+ const gridVoltage = parseFloat(
+  String(solarData?.['knox/inverter_1/grid_voltage'] || '0'),
+);
+
+
+  // ================= SOLAR =================
+  const solarPower1 = parseFloat(
+    String(solarData?.['knox/inverter_1/pv1_input_power'] || '0'),
+  );
+  const solarPower2 = parseFloat(
+    String(solarData?.['knox/inverter_1/pv2_input_power'] || '0'),
+  );
+  const solarPower = solarPower1 + solarPower2;
+
+  // ================= LOAD =================
+  const loadPower = parseFloat(
+    String(solarData?.['knox/inverter_1/ac_output_active_power'] || '0'),
+  );
+
+  // ================= BATTERY =================
+  const batteryVoltage = parseFloat(
+    String(solarData?.['knox/inverter_1/battery_voltage'] || '0'),
+  );
+
+  const batteryChargingCurrent = parseFloat(
+    String(solarData?.['knox/inverter_1/battery_charging_current'] || '0'),
+  );
+
+  const batteryDischargingCurrent = parseFloat(
+    String(solarData?.['knox/inverter_1/battery_discharge_current'] || '0'),
+  );
+
+  const batterySoc = String(
+    solarData?.['knox/inverter_1/battery_capacity'] || '0%',
+  ).replace(/\s+/g, '');
+
+  // Battery powers (explicit)
+  const batteryChargingPower =
+    batteryChargingCurrent > 0 ? batteryVoltage * batteryChargingCurrent : 0;
+
+  const batteryDischargingPower =
+    batteryDischargingCurrent > 0
+      ? batteryVoltage * batteryDischargingCurrent
+      : 0;
+
+  const calculatedGridPower =
+    batteryChargingPower - batteryDischargingPower - solarPower + loadPower;
+
+  const gridPower = gridVoltage > 0 ? +calculatedGridPower.toFixed(1) : 0;
+
+
+  const batteryPower = +(
+  batteryChargingPower - batteryDischargingPower
+).toFixed(1);
 
   useEffect(() => {
     animation.current?.play();
@@ -130,30 +240,18 @@ function KnoxSolarData() {
           style={{
             paddingHorizontal: 20,
             position: 'relative',
-            height:
-              screenWidth < 804
-                ? 400
-                : 600,
+            height: screenWidth < 804 ? 400 : 600,
             top: 0,
             borderWidth: 1,
             borderRadius: 10,
             borderColor: 'lightgray',
-            width:
-              screenWidth < 804
-                ? screenWidth * 0.8
-                : screenWidth * 0.5,
+            width: screenWidth < 804 ? screenWidth * 0.8 : screenWidth * 0.5,
           }}>
           <Image
             source={require('../../assets/imgs/solar-inverter.png')}
             style={{
-              width:
-                screenWidth < 804
-                  ? 50
-                  : 80,
-              height:
-                screenWidth < 804
-                  ? 50
-                  : 80,
+              width: screenWidth < 804 ? 50 : 80,
+              height: screenWidth < 804 ? 50 : 80,
               zIndex: 999999,
               position: 'absolute',
               left: '47%',
@@ -166,18 +264,9 @@ function KnoxSolarData() {
             style={{
               position: 'absolute',
               left: '5%',
-              top:
-                screenWidth < 804
-                  ? '41%'
-                  : '40%',
-              width:
-                screenWidth < 804
-                  ? 40
-                  : 70,
-              height:
-                screenWidth < 804
-                  ? 40
-                  : 70,
+              top: screenWidth < 804 ? '41%' : '40%',
+              width: screenWidth < 804 ? 40 : 70,
+              height: screenWidth < 804 ? 40 : 70,
               zIndex: 9999,
             }}
             resizeMode="contain"
@@ -188,20 +277,24 @@ function KnoxSolarData() {
               flexDirection: 'column',
               alignItems: 'center',
               position: 'absolute',
-              left:
-                screenWidth < 804
-                  ? '3%'
-                  : '5%',
+              left: screenWidth < 804 ? '3%' : '5%',
               top: '52%',
             }}>
             <Text
               style={{
-                color: 'orange',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 9,
+                color: '#565461ff',
+
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>Load</Text>
+            <Text
+              style={{
+                color: '#565461ff',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 10,
               }}>{`${
               `${parseFloat(
-                solarData['knox/inverter_1/ac_output_total_active_power'],
+                solarData?.['knox/inverter_1/ac_output_active_power'] || 0,
               )} W` || '0 W'
             }`}</Text>
 
@@ -257,18 +350,9 @@ function KnoxSolarData() {
             style={{
               position: 'absolute',
               right: '5%',
-              top:
-                screenWidth < 804
-                  ? '41%'
-                  : '40%',
-              width:
-                screenWidth < 804
-                  ? 40
-                  : 70,
-              height:
-                screenWidth < 804
-                  ? 40
-                  : 70,
+              top: screenWidth < 804 ? '41%' : '40%',
+              width: screenWidth < 804 ? 40 : 70,
+              height: screenWidth < 804 ? 40 : 70,
               zIndex: 9999,
             }}
             resizeMode="contain"
@@ -279,23 +363,38 @@ function KnoxSolarData() {
               flexDirection: 'column',
               alignItems: 'center',
               position: 'absolute',
-              right:
-              screenWidth < 804
-                ? '4%'
-                : '5%',
+              right: screenWidth < 804 ? '4%' : '5%',
               top: '52%',
             }}>
             <Text
               style={{
-                color: '#6158F1',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 9,
+                color: '#565461ff',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+                alignSelf: 'center',
+              }}>
+              GRID
+            </Text>
+            <Text
+              style={{
+                color: '#73717cff',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 10,
                 alignSelf: 'center',
               }}>
               {`${Math.abs(
-                parseFloat(
-                  solarData['knox/inverter_1/ac_input_total_active_power'],
-                ),
+                parseFloat(solarData['knox/inverter_1/grid_voltage']),
+              )} V` ?? '0 V'}
+            </Text>
+            <Text
+              style={{
+                color: '#73717cff',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 10,
+                alignSelf: 'center',
+              }}>
+              {`${Math.abs(
+               gridPower
               )} W` ?? '0 W'}
             </Text>
             <Text
@@ -341,7 +440,7 @@ function KnoxSolarData() {
             source={require('../../assets/imgs/icons/brightnessIcon.png')}
             style={{
               position: 'absolute',
-              top: '11%',
+              top: '7%',
               left: '49%',
               width: screenWidth < 804 ? 40 : 70,
               height: screenWidth < 804 ? 40 : 70,
@@ -355,23 +454,33 @@ function KnoxSolarData() {
               flexDirection: 'column',
               alignItems: 'center',
               position: 'absolute',
-              left: '52%',
-              top: '3%',
+              left: '69%',
+              top: '5%',
             }}>
+                <Text
+                  style={{
+                    color: statuses.solarStatus.color,
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 11,
+                  }}>
+                  SOLAR
+                </Text>
             <Text
               style={{
-                color: '#E57A45',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 9,
+                // color: '#E57A45',
+                                color: '#73717cff',
+
+                fontFamily: 'Poppins-Regular',
+                fontSize:11,
                 alignSelf: 'center',
               }}>
               {`${
                 `${
                   (parseFloat(
-                    solarData['knox/inverter_1/solar_input_power_1'],
+                    solarData['knox/inverter_1/pv1_input_power'],
                   ) || 0) +
                   (parseFloat(
-                    solarData['knox/inverter_1/solar_input_power_2'],
+                    solarData['knox/inverter_1/pv2_input_power'],
                   ) || 0)
                 } W` || '0 W'
               }`}
@@ -426,18 +535,17 @@ function KnoxSolarData() {
               alignItems: 'center',
               position: 'absolute',
               left: screenWidth < 804 ? '46.75%' : '48.775%',
-              bottom: '6%',
+              bottom: '1%',
             }}>
             <Text
-              style={{color: 'green', fontFamily: 'Poppins-Bold', fontSize: 9}}>
-              {`${
-                `${(
-                  (parseFloat(solarData['knox/inverter_1/battery_voltage']) ||
-                    0) *
-                  (parseFloat(solarData['knox/inverter_1/battery_current']) ||
-                    0)
-                ).toFixed(1)} W` || '0 W'
-              }`}
+              style={{
+                // color: 'green',
+                                color: '#73717cff',
+
+                 fontFamily: 'Poppins-Regular', fontSize: 9}}>
+              {
+                `${Math.abs(batteryPower)} W` || '0 W'
+              }
               (
               {`${(
                 solarData['knox/inverter_1/battery_capacity'] ?? '0%'
@@ -446,9 +554,19 @@ function KnoxSolarData() {
             </Text>
             <Text
               style={{
+                // color: statuses.batteryStatus.color,
+                                color: '#73717cff',
+
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>
+              BATTERY
+            </Text>
+            <Text
+              style={{
                 color: statuses.batteryStatus.color,
                 fontFamily: 'Poppins-Regular',
-                fontSize: 9,
+                fontSize: 11,
               }}>
               {statuses.batteryStatus.text}
             </Text>
@@ -485,307 +603,306 @@ function KnoxSolarData() {
         </View>
       </View>
 
-     <View
-       style={{
-         display: 'flex',
-         flexDirection: 'column',
-         marginTop: screenWidth < 804 ? 35 : 50,
-         marginBottom: 20,
-         paddingHorizontal: 15,
-         width: '100%',
-       }}>
-       <View
-         style={{
-           display: 'flex',
-           flexDirection: 'row',
-           alignItems: 'center',
-           justifyContent: 'space-between',
-           flexWrap: screenWidth < 600 ? 'wrap' : 'nowrap',
-           gap: 8,
-         }}>
-         
-         {/* Grid Card */}
-         <View
-           style={{
-             flex: screenWidth < 600 ? 0 : 1,
-             width: screenWidth < 600 ? '48%' : 'auto',
-             minWidth: screenWidth < 600 ? 160 : 120,
-             padding: screenWidth < 804 ? 12 : 15,
-             display: 'flex',
-             flexDirection: 'column',
-             alignItems: 'center',
-             backgroundColor: 'white',
-             borderWidth: 1,
-             borderColor: '#e2e8f0',
-             borderRadius: 12,
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: screenWidth < 804 ? 35 : 50,
+          marginBottom: 20,
+          paddingHorizontal: 15,
+          width: '100%',
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: screenWidth < 600 ? 'wrap' : 'nowrap',
+            gap: 8,
+          }}>
+          {/* Grid Card */}
+          <View
+            style={{
+              flex: screenWidth < 600 ? 0 : 1,
+              width: screenWidth < 600 ? '48%' : 'auto',
+              minWidth: screenWidth < 600 ? 160 : 120,
+              padding: screenWidth < 804 ? 12 : 15,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#e2e8f0',
+              borderRadius: 12,
               //height: screenWidth < 804 ? 120 : 180,
-           }}>
-           <View style={{
-             display: 'flex',
-             flexDirection: 'row',
-             alignItems: 'center',
-             marginBottom: 8,
-           }}>
-             <Image
-               source={require('../../assets/imgs/icons/gridicon2.png')}
-               style={{
-                 width: screenWidth < 804 ? 24 : 28,
-                 height: screenWidth < 804 ? 24 : 28,
-                 marginRight: 6,
-               }}
-             />
-             <Text
-               style={{
-                 fontFamily: 'Poppins-Medium',
-                 fontSize: screenWidth < 804 ? 12 : 14,
-                 color: '#64748b',
-               }}>
-               Grid
-             </Text>
-           </View>
-           <Text
-             style={{
-               fontSize: screenWidth < 804 ? 13 : 22,
-               fontFamily: 'Poppins-Bold',
-               color: '#1B3C55',
-               marginBottom: 2,
-             }}>
-             {`${Math.abs(
-               parseFloat(
-                 solarData['knox/inverter_1/ac_input_total_active_power'],
-               ),
-             )} W` ?? '0 W'}
-           </Text>
-           <View
-             style={{
-               backgroundColor: statuses.gridStatus.bg,
-               borderRadius: 12,
-               paddingHorizontal: 10,
-               paddingVertical: 4,
-             }}>
-             <Text
-               style={{
-                 color: statuses.gridStatus.color,
-                 fontSize: screenWidth < 804 ? 9 : 10,
-                 fontFamily: 'Poppins-SemiBold',
-               }}>
-               {statuses.gridStatus.text}
-             </Text>
-           </View>
-         </View>
-     
-         {/* Solar Card */}
-         <View
-           style={{
-             flex: screenWidth < 600 ? 0 : 1,
-             width: screenWidth < 600 ? '48%' : 'auto',
-             minWidth: screenWidth < 600 ? 160 : 120,
-             padding: screenWidth < 804 ? 12 : 15,
-             display: 'flex',
-             flexDirection: 'column',
-             alignItems: 'center',
-             backgroundColor: 'white',
-             borderWidth: 1,
-             borderColor: '#e2e8f0',
-             borderRadius: 12,
-              //height: screenWidth < 804 ? 120 : 180,
-           }}>
-           <View style={{
-             display: 'flex',
-             flexDirection: 'row',
-             alignItems: 'center',
-             marginBottom: 8,
-           }}>
-             <Image
-               source={require('../../assets/imgs/icons/brightnessIcon.png')}
-               style={{
-                 width: screenWidth < 804 ? 24 : 28,
-                 height: screenWidth < 804 ? 24 : 28,
-                 marginRight: 6,
-               }}
-             />
-             <Text
-               style={{
-                 fontFamily: 'Poppins-Medium',
-                 fontSize: screenWidth < 804 ? 12 : 14,
-                 color: '#64748b',
-               }}>
-               Solar
-             </Text>
-           </View>
-           <Text
-             style={{
-               fontSize: screenWidth < 804 ? 13 : 22,
-               fontFamily: 'Poppins-Bold',
-               color: '#1B3C55',
-               marginBottom: 2,
-             }}>
-             {`${
-               (parseFloat(
-                 solarData['knox/inverter_1/solar_input_power_1'],
-               ) || 0) +
-               (parseFloat(
-                 solarData['knox/inverter_1/solar_input_power_2'],
-               ) || 0)
-             } W` || '0 W'}
-           </Text>
-           <View
-             style={{
-               backgroundColor: statuses.solarStatus.bg,
-               borderRadius: 12,
-               paddingHorizontal: 10,
-               paddingVertical: 4,
-             }}>
-             <Text
-               style={{
-                 color: statuses.solarStatus.color,
-                 fontSize: screenWidth < 804 ? 9 : 10,
-                 fontFamily: 'Poppins-SemiBold',
-               }}>
-               {statuses.solarStatus.text}
-             </Text>
-           </View>
-         </View>
-     
-         {/* Battery Card */}
-         <View
-           style={{
-             flex: screenWidth < 600 ? 0 : 1,
-             width: screenWidth < 600 ? '48%' : 'auto',
-             minWidth: screenWidth < 600 ? 160 : 120,
-             padding: screenWidth < 804 ? 12 : 15,
-             display: 'flex',
-             flexDirection: 'column',
-             alignItems: 'center',
-             backgroundColor: 'white',
-             borderWidth: 1,
-             borderColor: '#e2e8f0',
-             borderRadius: 12,
-              //height: screenWidth < 804 ? 120 : 180,
-           }}>
-           <View style={{
-             display: 'flex',
-             flexDirection: 'row',
-             alignItems: 'center',
-             marginBottom: 8,
-           }}>
-             <Image
-               source={require('../../assets/imgs/icons/batteryicon2.png')}
-               style={{
-                 width: screenWidth < 804 ? 24 : 28,
-                 height: screenWidth < 804 ? 24 : 28,
-                 marginRight: 6,
-               }}
-             />
-             <Text
-               style={{
-                 fontFamily: 'Poppins-Medium',
-                 fontSize: screenWidth < 804 ? 12 : 14,
-                 color: '#64748b',
-               }}>
-               Battery ({`${(solarData['knox/inverter_1/battery_capacity'] ?? '0%').replace(/\s+/g, '')}`})
-             </Text>
-           </View>
-           <Text
-             style={{
-               fontSize: screenWidth < 804 ? 13 : 22,
-               fontFamily: 'Poppins-Bold',
-               color: '#1B3C55',
-               marginBottom: 2,
-             }}>
-             {`${(
-               (parseFloat(solarData['knox/inverter_1/battery_voltage']) || 0) *
-               (parseFloat(solarData['knox/inverter_1/battery_current']) || 0)
-             ).toFixed(1)} W` || '0 W'}
-           </Text>
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <Image
+                source={require('../../assets/imgs/icons/gridicon2.png')}
+                style={{
+                  width: screenWidth < 804 ? 24 : 28,
+                  height: screenWidth < 804 ? 24 : 28,
+                  marginRight: 6,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screenWidth < 804 ? 12 : 14,
+                  color: '#64748b',
+                }}>
+                Grid
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: screenWidth < 804 ? 13 : 22,
+                fontFamily: 'Poppins-Bold',
+                color: '#1B3C55',
+                marginBottom: 2,
+              }}>
+              {`${Math.abs(
+                parseFloat(solarData['knox/inverter_1/grid_voltage']),
+              )} V` ?? '0 V'}
+            </Text>
+            <View
+              style={{
+                backgroundColor: statuses.gridStatus.bg,
+                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+              }}>
+              <Text
+                style={{
+                  color: statuses.gridStatus.color,
+                  fontSize: screenWidth < 804 ? 9 : 10,
+                  fontFamily: 'Poppins-SemiBold',
+                }}>
+                {statuses.gridStatus.text}
+              </Text>
+            </View>
+          </View>
 
-           <View
-             style={{
-               backgroundColor: statuses.batteryStatus.bg,
-               borderRadius: 12,
-               paddingHorizontal: 10,
-               paddingVertical: 4,
-             }}>
-             <Text
-               style={{
-                 color: statuses.batteryStatus.color,
-                 fontSize: screenWidth < 804 ? 9 : 10,
-                 fontFamily: 'Poppins-SemiBold',
-               }}>
-               {statuses.batteryStatus.text}
-             </Text>
-           </View>
-         </View>
-     
-         {/* Load Card */}
-         <View
-           style={{
-             flex: screenWidth < 600 ? 0 : 1,
-             width: screenWidth < 600 ? '48%' : 'auto',
-             minWidth: screenWidth < 600 ? 160 : 120,
-             padding: screenWidth < 804 ? 12 : 15,
-             display: 'flex',
-             flexDirection: 'column',
-             alignItems: 'center',
-             backgroundColor: 'white',
-             borderWidth: 1,
-             borderColor: '#e2e8f0',
-             borderRadius: 12,
-             //height: screenWidth < 804 ? 120 : 180,
-           }}>
-           <View style={{
-             display: 'flex',
-             flexDirection: 'row',
-             alignItems: 'center',
-             marginBottom: 8,
-           }}>
-             <Image
-               source={require('../../assets/imgs/icons/bulbicon.png')}
-               style={{
-                 width: screenWidth < 804 ? 24 : 28,
-                 height: screenWidth < 804 ? 24 : 28,
-                 marginRight: 6,
-               }}
-             />
-             <Text
-               style={{
-                 fontFamily: 'Poppins-Medium',
-                 fontSize: screenWidth < 804 ? 12 : 14,
-                 color: '#64748b',
-               }}>
-               Load
-             </Text>
-           </View>
-           <Text
-             style={{
-               fontSize: screenWidth < 804 ? 13 : 22,
-               fontFamily: 'Poppins-Bold',
-               color: '#1B3C55',
-               marginBottom: 2,
-             }}>
-             {`${parseFloat(
-               solarData['knox/inverter_1/ac_output_total_active_power'],
-             )} W` || '0 W'}
-           </Text>
-           <View
-             style={{
-               backgroundColor: statuses.loadStatus.bg,
-               borderRadius: 12,
-               paddingHorizontal: 10,
-               paddingVertical: 4,
-             }}>
-             <Text
-               style={{
-                 color: statuses.loadStatus.color,
-                 fontSize: screenWidth < 804 ? 9 : 10,
-                 fontFamily: 'Poppins-SemiBold',
-               }}>
-               {statuses.loadStatus.text}
-             </Text>
-           </View>
-         </View>
-       </View>
-     </View>
+          {/* Solar Card */}
+          <View
+            style={{
+              flex: screenWidth < 600 ? 0 : 1,
+              width: screenWidth < 600 ? '48%' : 'auto',
+              minWidth: screenWidth < 600 ? 160 : 120,
+              padding: screenWidth < 804 ? 12 : 15,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#e2e8f0',
+              borderRadius: 12,
+              //height: screenWidth < 804 ? 120 : 180,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <Image
+                source={require('../../assets/imgs/icons/brightnessIcon.png')}
+                style={{
+                  width: screenWidth < 804 ? 24 : 28,
+                  height: screenWidth < 804 ? 24 : 28,
+                  marginRight: 6,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screenWidth < 804 ? 12 : 14,
+                  color: '#64748b',
+                }}>
+                Solar
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: screenWidth < 804 ? 13 : 22,
+                fontFamily: 'Poppins-Bold',
+                color: '#1B3C55',
+                marginBottom: 2,
+              }}>
+              {`${
+                (parseFloat(solarData['knox/inverter_1/pv1_input_power']) ||
+                  0) +
+                (parseFloat(solarData['knox/inverter_1/pv2_input_power']) || 0)
+              } W` || '0 W'}
+            </Text>
+            <View
+              style={{
+                backgroundColor: statuses.solarStatus.bg,
+                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+              }}>
+              <Text
+                style={{
+                  color: statuses.solarStatus.color,
+                  fontSize: screenWidth < 804 ? 9 : 10,
+                  fontFamily: 'Poppins-SemiBold',
+                }}>
+                {statuses.solarStatus.text}
+              </Text>
+            </View>
+          </View>
+
+          {/* Battery Card */}
+          <View
+            style={{
+              flex: screenWidth < 600 ? 0 : 1,
+              width: screenWidth < 600 ? '48%' : 'auto',
+              minWidth: screenWidth < 600 ? 160 : 120,
+              padding: screenWidth < 804 ? 12 : 15,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#e2e8f0',
+              borderRadius: 12,
+              //height: screenWidth < 804 ? 120 : 180,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <Image
+                source={require('../../assets/imgs/icons/batteryicon2.png')}
+                style={{
+                  width: screenWidth < 804 ? 24 : 28,
+                  height: screenWidth < 804 ? 24 : 28,
+                  marginRight: 6,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screenWidth < 804 ? 12 : 14,
+                  color: '#64748b',
+                }}>
+                Battery (
+                {`${(
+                  solarData['knox/inverter_1/battery_capacity'] ?? '0%'
+                ).replace(/\s+/g, '')}`}
+                )
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: screenWidth < 804 ? 13 : 22,
+                fontFamily: 'Poppins-Bold',
+                color: '#1B3C55',
+                marginBottom: 2,
+              }}>
+              {batteryInfo?.value ?? '0 A (0%)'}
+            </Text>
+
+            <View
+              style={{
+                backgroundColor: statuses.batteryStatus.bg,
+                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+              }}>
+              <Text
+                style={{
+                  color: statuses.batteryStatus.color,
+                  fontSize: screenWidth < 804 ? 9 : 10,
+                  fontFamily: 'Poppins-SemiBold',
+                }}>
+                {statuses.batteryStatus.text}
+              </Text>
+            </View>
+          </View>
+
+          {/* Load Card */}
+          <View
+            style={{
+              flex: screenWidth < 600 ? 0 : 1,
+              width: screenWidth < 600 ? '48%' : 'auto',
+              minWidth: screenWidth < 600 ? 160 : 120,
+              padding: screenWidth < 804 ? 12 : 15,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#e2e8f0',
+              borderRadius: 12,
+              //height: screenWidth < 804 ? 120 : 180,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <Image
+                source={require('../../assets/imgs/icons/bulbicon.png')}
+                style={{
+                  width: screenWidth < 804 ? 24 : 28,
+                  height: screenWidth < 804 ? 24 : 28,
+                  marginRight: 6,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screenWidth < 804 ? 12 : 14,
+                  color: '#64748b',
+                }}>
+                Load
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: screenWidth < 804 ? 13 : 22,
+                fontFamily: 'Poppins-Bold',
+                color: '#1B3C55',
+                marginBottom: 2,
+              }}>
+              {`${parseFloat(
+                solarData['knox/inverter_1/ac_output_active_power'],
+              )} W` || '0 W'}
+            </Text>
+            <View
+              style={{
+                backgroundColor: statuses.loadStatus.bg,
+                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+              }}>
+              <Text
+                style={{
+                  color: statuses.loadStatus.color,
+                  fontSize: screenWidth < 804 ? 9 : 10,
+                  fontFamily: 'Poppins-SemiBold',
+                }}>
+                {statuses.loadStatus.text}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
