@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, View, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
 import NavBar from '../../layouts/navigations/navbar';
@@ -13,8 +13,11 @@ function AssignCameraZone() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent={true} />
+      <View style={styles.headerContainer}>
+
       <NavBar Content="Assign Zone" BackAction="Cameras" showThirdBtn={false} />
       <AssignZoneToSensor cameraId={cameraId} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -24,6 +27,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#1E293B',
+  },
+
+   headerContainer: {
+    backgroundColor: 'white',
+    height: '100%',
   },
 });
 

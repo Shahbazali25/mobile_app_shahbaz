@@ -16,7 +16,7 @@ function AssignSensorZone() {
       <StatusBar translucent={true} />
       <View style={styles.headerContainer}>
         <NavBar
-          Content="Assignsss Zone"
+          Content="Assign Zone"
           BackAction="SensorSetup"
           showThirdBtn={false}
         />
