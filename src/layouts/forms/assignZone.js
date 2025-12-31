@@ -7,6 +7,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import PrimaryBtn from '../buttons/primaryBtn';
 import {getAllZones} from '../../components/apis/zones/getAllZones';
 import {zoneAssignToSensor} from '../../components/apis/sensors/zoneAssignToSensor';
+import CustomGenericPicker from '../CustomGenericPicker';
 
 export default function AssignZone({sensorId}) {
   const animation = useRef(null);
@@ -103,7 +104,11 @@ export default function AssignZone({sensorId}) {
       </View>
     );
   }
-
+const zoneOptions =
+    zones?.map(zone => ({
+      label: zone.name,
+      value: zone.id,
+    })) || [];
   return (
     <ScrollView style={styles.form}>
       <View>
@@ -120,7 +125,7 @@ export default function AssignZone({sensorId}) {
             style={styles.formLabel}>
             Zones
           </Text>
-          {Platform.select({
+          {/* {Platform.select({
             ios: (
               <TouchableOpacity
                 onPress={onPress}
@@ -171,7 +176,13 @@ export default function AssignZone({sensorId}) {
                   ))}
               </Picker>
             ),
-          })}
+          })} */}
+           <CustomGenericPicker
+            options={zoneOptions}
+            selectedValue={selectedOption}
+            onValueChange={value => setSelectedOption(value)}
+            placeholder="Select Zone"
+          />
         </View>
       </View>
 

@@ -1,5 +1,13 @@
 import {React, useState, useEffect, useRef} from 'react';
-import {StyleSheet, Text, View, ScrollView, Platform, ActionSheetIOS, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Platform,
+  ActionSheetIOS,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import AnimatedLottieView from 'lottie-react-native';
@@ -70,25 +78,25 @@ export default function AssignZoneToSensor({cameraId}) {
   };
 
   const onPress = () => {
-      const zoneOptions = ['Cancel', ...zones.map(zone => zone.name)];
-  
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: zoneOptions,
-          cancelButtonIndex: 0,
-          userInterfaceStyle: 'dark',
-        },
-        buttonIndex => {
-          if (buttonIndex === 0) {
-            return;
-          } else {
-            console.log(zones[buttonIndex-1])
-            const selectedZone = zones[buttonIndex - 1];
-            setSelectedOption(selectedZone.id);
-          }
-        },
-      );
-    };
+    const zoneOptions = ['Cancel', ...zones.map(zone => zone.name)];
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: zoneOptions,
+        cancelButtonIndex: 0,
+        userInterfaceStyle: 'dark',
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          return;
+        } else {
+          console.log(zones[buttonIndex - 1]);
+          const selectedZone = zones[buttonIndex - 1];
+          setSelectedOption(selectedZone.id);
+        }
+      },
+    );
+  };
 
   if (isLoading) {
     return (
@@ -103,10 +111,11 @@ export default function AssignZoneToSensor({cameraId}) {
       </View>
     );
   }
-const zoneOptions = zones?.map(zone => ({
-  label: zone.name,
-  value: zone.id,
-})) || [];
+  const zoneOptions =
+    zones?.map(zone => ({
+      label: zone.name,
+      value: zone.id,
+    })) || [];
 
   return (
     <ScrollView style={styles.form}>
@@ -124,19 +133,19 @@ const zoneOptions = zones?.map(zone => ({
             style={styles.formLabel}>
             Zones
           </Text>
-           <CustomGenericPicker
-    options={zoneOptions}
-    selectedValue={selectedOption}
-    onValueChange={value => setSelectedOption(value)}
-    placeholder="Select Zone"
-  />
+          <CustomGenericPicker
+            options={zoneOptions}
+            selectedValue={selectedOption}
+            onValueChange={value => setSelectedOption(value)}
+            placeholder="Select Zone"
+          />
         </View>
       </View>
 
       <View style={{marginBottom: 70, marginTop: 20}}>
         <PrimaryBtn
           onClickMethod={zoneAssign}
-          Content={isLoading ? 'Assigning Zone...' : 'Assssign Zone'}
+          Content={isLoading ? 'Assigning Zone...' : 'Assign Zone'}
         />
       </View>
     </ScrollView>
