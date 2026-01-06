@@ -18,7 +18,7 @@ import {getAllRoles} from '../../components/apis/users/getAllRoles';
 import {signupApi} from '../../components/apis/authentication/signUp';
 import successMessage from '../../components/utils/successMessage';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
+import CustomGenericPicker from '../CustomGenericPicker';
 export default function AddUserForm() {
   const animation = useRef(null);
   const navigation = useNavigation();
@@ -242,73 +242,21 @@ export default function AddUserForm() {
             style={[styles.sectionLabel, {marginTop: 12}]}>
             Assign Role
           </Text>
-          {Platform.select({
-            ios: (
-              <TouchableOpacity
-                onPress={onPress}
-                style={{
-                  borderWidth: 1,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderColor: '#1E293B',
-                  borderRadius: 4,
-                  padding: 8,
-                  width: '100%',
-                  marginTop: 4,
-                  marginBottom: 10,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 12,
-                    color: '#1E293B',
-                    alignSelf: 'center',
-                  }}>
-                  {(selectedOption &&
-                    roles.find(role => role.id === selectedOption)?.name) ||
-                    'Select Role'}
-                </Text>
-              </TouchableOpacity>
-            ),
-            android: (
-              // the selectedOption is not showing border radius on android picker
-              <View
-                style={{
-                  borderRadius: 15,
-                  overflow: 'hidden',
-                  height: 50,
-                  marginBottom: 12,
-                }}>
-                <Picker
-                  selectedValue={selectedOption}
-                  onValueChange={value => {
-                    setSelectedOption(value);
-                    setRole_id(value); // <-- ADD THIS
-                  }}
-                  style={styles.picker}>
-                  {roles &&
-                    roles.map(role => (
-                      <Picker.Item
-                        label={role.name}
-                        key={role.id}
-                        value={role.id}
-                        style={{
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 12,
-                          borderRadius: 15,
-                        }}
-                      />
-                    ))}
-                </Picker>
-              </View>
-            ),
-          })}
+          <CustomGenericPicker
+  options={(roles || []).map(role => ({
+    label: role.name,
+    value: role.id,
+  }))}
+  selectedValue={selectedOption}
+  onValueChange={value => {
+    setSelectedOption(value);
+    setRole_id(value); // keep your existing logic
+  }}
+  placeholder="Select Role"
+/>
         </View>
 
-        <View style={{marginBottom: 70}}>
+        <View style={{marginBottom: 70, marginTop: 20}}>
           <PrimaryBtn
             onClickMethod={userCreate}
             Content={isLoading ? 'Adding...' : 'Add User'}

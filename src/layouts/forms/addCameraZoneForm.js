@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 import {React, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -25,6 +26,23 @@ export default function AddCameraZoneForm() {
   const navigation = useNavigation();
 
   const zoneCreate = async () => {
+
+    // Check for missing fields first
+  if (!name || !selectedIcon || !description) {
+    let missingFields = [];
+    if (!name) missingFields.push('Name');
+    if (!selectedIcon) missingFields.push('Icon');
+    if (!description) missingFields.push('Description');
+
+    Toast.show({
+      type: 'error',
+      text1: 'Missing Fields',
+      text2: `Please enter ${missingFields.join(', ')} and retry.`,
+    });
+    return; // Stop execution if fields are missing
+  }
+
+  
     setLoading(true);
     try {
       const create = await addZone(name, selectedIcon, description);

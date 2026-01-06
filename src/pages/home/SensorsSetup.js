@@ -47,7 +47,7 @@ function SensorSetup() {
         console.error('Invalid sensors response:', response);
         setSensors(null);
       }
-      console.log(response);
+      console.log('These are all sensors :: ',response);
     } catch (error) {
       console.log(error);
     } finally {
