@@ -4,7 +4,7 @@ export const baseURL = `https://stream-tst-sbx.ibexvision.ai`;
 
 export const SOCKET_URL = 'wss://stream-tst-sbx.ibexvision.ai';
 // export const SOCKET_URL = 'ws://localhost:8082';
-export const deviceId = 1;
+export const deviceId = 9;
 // const ENV = 'local'; // 'local' | 'emulator' | 'prod'
 
 // export const baseURL =
